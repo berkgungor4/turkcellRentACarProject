@@ -19,6 +19,8 @@ import com.turkcell.rentACarProject.business.requests.color.CreateColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.DeleteColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.UpdateColorRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
+import com.turkcell.rentACarProject.core.utilities.result.DataResult;
+import com.turkcell.rentACarProject.core.utilities.result.Result;
 
 @RestController
 @RequestMapping("/api/colors")
@@ -32,27 +34,27 @@ public class ColorsController {
 	}
 	
 	@GetMapping("/getall")
-	public List<ListColorDto> getAll(){
+	public DataResult<List<ListColorDto>> getAll(){
 		return this.colorService.getAll();
 	}
 	
 	@PostMapping("/create")
-	public void add(@RequestBody CreateColorRequest createColorRequest) throws BusinessException{
-		this.colorService.create(createColorRequest);
+	public Result add(@RequestBody CreateColorRequest createColorRequest) throws BusinessException{
+		return this.colorService.create(createColorRequest);
 	}
 	
 	@DeleteMapping("/delete")
-	public void delete(@RequestBody DeleteColorRequest deleteColorRequest) {
-		this.colorService.delete(deleteColorRequest);
+	public Result delete(@RequestBody DeleteColorRequest deleteColorRequest) {
+		return this.colorService.delete(deleteColorRequest);
 	}
 	
 	@PutMapping("/update")
-	public void update(@RequestBody UpdateColorRequest updateColorRequest) {
-		this.colorService.update(updateColorRequest);
+	public Result update(@RequestBody UpdateColorRequest updateColorRequest) {
+		return this.colorService.update(updateColorRequest);
 	}
 	
 	@GetMapping("/get")
-	public GetColorDto get(@RequestParam int id) throws BusinessException {
+	public DataResult<GetColorDto> get(@RequestParam int id) throws BusinessException {
 		return this.colorService.getById(id);
 	}
 	
