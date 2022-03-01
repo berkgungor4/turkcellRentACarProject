@@ -1,6 +1,7 @@
-package com.turkcell.northwindProject.core.utilities.results;
+package com.turkcell.rentACarProject.core.utilities.result;
 
 public class ErrorResult extends Result {
+
 	public ErrorResult() {
 		super(false);
 	}

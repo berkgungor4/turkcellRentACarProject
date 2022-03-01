@@ -1,8 +1,9 @@
-package com.turkcell.northwindProject.core.utilities.results;
+package com.turkcell.rentACarProject.core.utilities.result;
 
-public class SuccessDataResult<T> extends DataResult<T> {
+public class SuccessDataResult<T> extends DataResult<T>{
+	
 	public SuccessDataResult(T data, String message) {
-		super(data,true,message);
+		super(data,message,true);
 	}
 	
 	public SuccessDataResult(T data) {
@@ -10,11 +11,10 @@ public class SuccessDataResult<T> extends DataResult<T> {
 	}
 	
 	public SuccessDataResult(String message) {
-		super(null,true,message);
+		super(null,message,true);
 	}
 	
 	public SuccessDataResult() {
 		super(null,true);
 	}
-	
 }
