@@ -14,6 +14,10 @@ import com.turkcell.rentACarProject.business.requests.color.DeleteColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.UpdateColorRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
+import com.turkcell.rentACarProject.core.utilities.result.DataResult;
+import com.turkcell.rentACarProject.core.utilities.result.Result;
+import com.turkcell.rentACarProject.core.utilities.result.SuccessDataResult;
+import com.turkcell.rentACarProject.core.utilities.result.SuccessResult;
 import com.turkcell.rentACarProject.dataAccess.abstracts.ColorDao;
 import com.turkcell.rentACarProject.entities.concretes.Color;
 
@@ -30,26 +34,27 @@ public class ColorManager implements ColorService {
 	}
 
 	@Override
-	public List<ListColorDto> getAll() {
+	public DataResult<List<ListColorDto>> getAll() {
 		var result = this.colorDao.findAll();
 		List<ListColorDto> response = result.stream()
 				.map(color -> this.modelMapperService.forDto().map(color, ListColorDto.class))
 				.collect(Collectors.toList());
-		return response;
+		return new SuccessDataResult<List<ListColorDto>> (response);
 	}
-
+	
 	@Override
-	public void create(CreateColorRequest createColorRequest) throws BusinessException {
+	public DataResult<GetColorDto> getById(int id) {
+		Color result = this.colorDao.getColorById(id);
+		GetColorDto response = this.modelMapperService.forDto().map(result, GetColorDto.class);
+		return new SuccessDataResult<GetColorDto>(response);
+	}
+	
+	@Override
+	public Result create(CreateColorRequest createColorRequest) throws BusinessException {
 		Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
 		checkIfColorExists(color);
 		this.colorDao.save(color);
-	}
-
-	@Override
-	public GetColorDto getById(int id) {
-		Color result = this.colorDao.getColorById(id);
-		GetColorDto response = this.modelMapperService.forDto().map(result, GetColorDto.class);
-		return response;
+		return new SuccessResult("Color.Created");
 	}
 
 	void checkIfColorExists(Color color) throws BusinessException {
@@ -59,15 +64,17 @@ public class ColorManager implements ColorService {
 	}
 
 	@Override
-	public void delete(DeleteColorRequest deleteColorRequest) {
+	public Result delete(DeleteColorRequest deleteColorRequest) {
 		Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
 		this.colorDao.delete(color);
+		return new SuccessResult("Color.Deleted");
 	}
 
 	@Override
-	public void update(UpdateColorRequest updateColorRequest) {
+	public Result update(UpdateColorRequest updateColorRequest) {
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
 		this.colorDao.save(color);
+		return new SuccessResult("Color.Updated");
 	}
 	
 }
