@@ -8,14 +8,16 @@ import com.turkcell.rentACarProject.business.requests.color.CreateColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.DeleteColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.UpdateColorRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
+import com.turkcell.rentACarProject.core.utilities.result.DataResult;
+import com.turkcell.rentACarProject.core.utilities.result.Result;
 
 public interface ColorService {
 
-	List<ListColorDto> getAll();
-	GetColorDto getById(int id) throws BusinessException;
+	DataResult<List<ListColorDto>> getAll();
+	DataResult<GetColorDto> getById(int id) throws BusinessException;
 	
-	void create(CreateColorRequest createColorRequest) throws BusinessException;
-	void delete(DeleteColorRequest deleteColorRequest);
-	void update(UpdateColorRequest updateColorRequest);
+	Result create(CreateColorRequest createColorRequest) throws BusinessException;
+	Result delete(DeleteColorRequest deleteColorRequest);
+	Result update(UpdateColorRequest updateColorRequest);
 
 }
