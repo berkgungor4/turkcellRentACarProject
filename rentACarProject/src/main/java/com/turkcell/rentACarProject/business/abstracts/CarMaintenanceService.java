@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.turkcell.rentACarProject.business.dtos.carMaintenance.GetCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.dtos.carMaintenance.ListCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.CreateCarMaintenanceRequest;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.DeleteCarMaintenanceRequest;
@@ -15,7 +16,7 @@ import com.turkcell.rentACarProject.core.utilities.result.Result;
 public interface CarMaintenanceService {
 	
 	DataResult<List<ListCarMaintenanceDto>> getAll();
-	DataResult<List<ListCarMaintenanceDto>> getByCarId(int carId);
+	DataResult<List<GetCarMaintenanceDto>> getByCarId(int carId);
 	
 	Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest);
 	Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest);
