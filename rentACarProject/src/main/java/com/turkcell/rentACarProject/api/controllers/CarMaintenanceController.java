@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.rentACarProject.business.abstracts.CarMaintenanceService;
+import com.turkcell.rentACarProject.business.dtos.carMaintenance.GetCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.dtos.carMaintenance.ListCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.CreateCarMaintenanceRequest;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.DeleteCarMaintenanceRequest;
@@ -53,7 +54,7 @@ public class CarMaintenanceController {
 	}
 	
 	@GetMapping("/getByCarId")
-	public DataResult<List<ListCarMaintenanceDto>> getByCarId(int carId){
+	public DataResult<List<GetCarMaintenanceDto>> getByCarId(int carId){
 		return this.carMaintenanceService.getByCarId(carId);
 	}
 	
