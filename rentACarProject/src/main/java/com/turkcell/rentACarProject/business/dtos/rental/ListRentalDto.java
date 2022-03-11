@@ -16,4 +16,5 @@ public class ListRentalDto {
 	private int customerId;
 	private LocalDate rentDate;
 	private LocalDate returnDate;
+	private String additionalServiceName;
 }
