@@ -22,7 +22,6 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	
 	private OrderedAdditionalServiceDao orderedAdditionalServiceDao;
 	private ModelMapperService modelMapperService;
-	//private RentalService rentalService;
 		
 	@Autowired
 	public OrderedAdditionalServiceManager(OrderedAdditionalServiceDao orderedAdditionalServiceDao, ModelMapperService modelMapperService,
@@ -30,7 +29,6 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		super();
 		this.orderedAdditionalServiceDao = orderedAdditionalServiceDao;
 		this.modelMapperService = modelMapperService;
-		//this.rentalService = rentalService;
 	}
 	
 	@Override
@@ -39,7 +37,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		
 		orderedAdditionalService.setId(0);
 		this.orderedAdditionalServiceDao.save(orderedAdditionalService);
-		return new SuccessResult("sss");
+		return new SuccessResult("OrderedAdditionalService.Added");
 	}
 
 	@Override
@@ -51,11 +49,5 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
 		return new SuccessDataResult<List<ListOrderedAdditionalServiceDto>>(response);
 	}
-	
-	/*private Result checkIfRentalExists(int rentalId) {
-		if (!rentalService.findBy(rentalId).isSuccess()) {
-			return new ErrorResult(Messages.rentalIsNotFound);
-		} else
-			return new SuccessResult();
-	}*/
+
 }

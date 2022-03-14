@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.turkcell.rentACarProject.business.abstracts.IndividualCustomerService;
 import com.turkcell.rentACarProject.business.dtos.individualCustomer.ListIndividualCustomerDto;
 import com.turkcell.rentACarProject.business.requests.individualCustomer.CreateIndividualCustomerRequest;
-import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
@@ -57,7 +56,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	}
 
 	@Override
-	public Result create(CreateIndividualCustomerRequest createCustomerRequest) throws BusinessException {
+	public Result create(CreateIndividualCustomerRequest createCustomerRequest) {
 		
 		IndividualCustomer customer = this.modelMapperService.forRequest().map(createCustomerRequest, IndividualCustomer.class);
 		this.individualCustomerDao.save(customer);

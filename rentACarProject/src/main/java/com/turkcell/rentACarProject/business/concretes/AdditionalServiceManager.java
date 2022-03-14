@@ -33,7 +33,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	public Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest) {
 		AdditionalService additionalService = this.modelMapperService.forRequest().map(createAdditionalServiceRequest, AdditionalService.class);
 		this.additionalServiceDao.save(additionalService);
-		return new SuccessResult("");
+		return new SuccessResult("AdditionalService.Added");
 	}
 
 	@Override

@@ -89,7 +89,7 @@ public class CarMaintenanceManager implements CarMaintenanceService{
 	public Result isCarInMaintenance(int carId) throws BusinessException {
 		
 		if(this.carMaintenanceDao.findByCarIdAndReturnDateIsNull(carId) != null)
-			throw new BusinessException("CarIsInMaintenance");
+			throw new BusinessException("Rental can't be added (Car is under maintenance at requested times");
 		
 		else
 			return new SuccessResult();
