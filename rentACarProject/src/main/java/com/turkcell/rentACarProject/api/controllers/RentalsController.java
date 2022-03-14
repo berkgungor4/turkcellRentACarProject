@@ -33,9 +33,14 @@ public class RentalsController {
 		this.rentalService = rentalService;
 	}
 	
-	@PostMapping("/create")
-	Result create(@RequestBody @Valid CreateRentalRequest createRentalRequest) throws BusinessException{
-		return this.rentalService.create(createRentalRequest);
+	@PostMapping("/createCorporateCustomer")
+	Result createCorporateCustomer(@RequestBody @Valid CreateRentalRequest createRentalRequest) throws BusinessException {
+		return this.rentalService.createForCorporateCustomer(createRentalRequest);
+	}
+	
+	@PostMapping("/createIndividualCustomer")
+	Result createIndividualCustomer(@RequestBody @Valid CreateRentalRequest createRentalRequest) throws BusinessException {
+		return this.rentalService.createForIndividualCustomer(createRentalRequest);
 	}
 	
 	@DeleteMapping("/delete")
@@ -58,9 +63,4 @@ public class RentalsController {
 		return this.rentalService.getById(id);
 	}
 
-	@GetMapping("/isRented")
-	Result isCarRented(int carId) throws BusinessException {
-		return this.rentalService.isCarRented(carId);
-	}
-	
 }
