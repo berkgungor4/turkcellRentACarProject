@@ -1,20 +1,20 @@
-package com.turkcell.rentACarProject.core.utilities.result;
+package com.turkcell.rentACarProject.core.utilities.results;
 
-public class SuccessDataResult<T> extends DataResult<T>{
+public class SuccessDataResult<T> extends DataResult<T> {
 	
 	public SuccessDataResult(T data, String message) {
-		super(data,message,true);
+		super(data, true, message);
 	}
 	
 	public SuccessDataResult(T data) {
-		super(data,true);
+		super(data, true);	
 	}
 	
 	public SuccessDataResult(String message) {
-		super(null,message,true);
+		super(null, true, message);
 	}
 	
-	public SuccessDataResult() {
-		super(null,true);
+	public SuccessDataResult( ) {
+		super(null, true);
 	}
 }

@@ -1,20 +1,20 @@
-package com.turkcell.rentACarProject.core.utilities.result;
+package com.turkcell.rentACarProject.core.utilities.results;
 
-public class ErrorDataResult<T> extends DataResult<T>{
+public class ErrorDataResult<T> extends DataResult<T> {
 	
 	public ErrorDataResult(T data, String message) {
-		super(data,message,false);
+		super(data, false, message);
 	}
 	
 	public ErrorDataResult(T data) {
-		super(data,false);
+		super(data, false);	
 	}
 	
 	public ErrorDataResult(String message) {
-		super(null,message,false);
+		super(null, false, message);
 	}
 	
-	public ErrorDataResult() {
-		super(null,false);
+	public ErrorDataResult( ) {
+		super(null, false);
 	}
 }
