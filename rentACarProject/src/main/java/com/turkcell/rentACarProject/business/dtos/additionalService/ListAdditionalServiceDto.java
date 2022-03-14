@@ -5,11 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class ListAdditionalServiceDto {
-
+	
 	private int id;
 	private String name;
-	private double dailyPrice;
+	private double price;
 }
