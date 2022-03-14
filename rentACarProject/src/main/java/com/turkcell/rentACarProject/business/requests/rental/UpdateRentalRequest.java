@@ -11,15 +11,21 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class UpdateRentalRequest {
-	
-    private int id;
+
     private int carId;
-    private int customerId;
+    private double additionalPrice;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate rentDate;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
+    
+    private int initialCityId;
+    private int returnCityId;
+    private int customerId;
+
 }
+

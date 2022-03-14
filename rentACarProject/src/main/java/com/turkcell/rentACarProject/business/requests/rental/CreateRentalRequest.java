@@ -1,5 +1,4 @@
 package com.turkcell.rentACarProject.business.requests.rental;
-
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,10 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateRentalRequest {
-	
-	private int carId;
-	private int customerId;
-	
+
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate rentDate;
+    private LocalDate rentDate;
+	
+    private int customerId;
+    private int carId;
+    private int initialCityId;
 }
