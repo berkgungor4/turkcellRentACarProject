@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 public class ListCarDto {
 
 	private int carId;
-	private double carDailyPrice;
-	private int carModelYear;
-	private String carDescription;
+	private double dailyPrice;
+	private int modelYear;
+	private String description;
 	private String brandName;
 	private String colorName;
-
 }
