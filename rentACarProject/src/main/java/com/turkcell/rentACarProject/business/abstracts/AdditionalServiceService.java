@@ -1,22 +1,12 @@
 package com.turkcell.rentACarProject.business.abstracts;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.turkcell.rentACarProject.business.dtos.additionalService.ListAdditionalServiceDto;
-import com.turkcell.rentACarProject.business.requests.additonalService.CreateAdditionalServiceRequest;
-import com.turkcell.rentACarProject.business.requests.additonalService.DeleteAdditionalServiceRequest;
-import com.turkcell.rentACarProject.business.requests.additonalService.UpdateAdditionalServiceRequest;
-import com.turkcell.rentACarProject.core.utilities.result.DataResult;
-import com.turkcell.rentACarProject.core.utilities.result.Result;
+import com.turkcell.rentACarProject.business.requests.additionalService.CreateAdditionalServiceRequest;
+import com.turkcell.rentACarProject.core.utilities.results.DataResult;
+import com.turkcell.rentACarProject.core.utilities.results.Result;
 
-@Service
 public interface AdditionalServiceService {
-	
-	DataResult<List<ListAdditionalServiceDto>> getAll();
-	
-	Result create(CreateAdditionalServiceRequest createAdditionalServiceRequest);
-	Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest);
-	Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest);
+
+	Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest);
+	DataResult<ListAdditionalServiceDto> findById(int id);
 }

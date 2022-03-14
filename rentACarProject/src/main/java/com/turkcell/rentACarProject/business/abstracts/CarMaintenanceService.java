@@ -2,24 +2,19 @@ package com.turkcell.rentACarProject.business.abstracts;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import com.turkcell.rentACarProject.business.dtos.carMaintenance.GetCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.dtos.carMaintenance.ListCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.CreateCarMaintenanceRequest;
-import com.turkcell.rentACarProject.business.requests.carMaintenance.DeleteCarMaintenanceRequest;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.UpdateCarMaintenanceRequest;
-import com.turkcell.rentACarProject.core.utilities.result.DataResult;
-import com.turkcell.rentACarProject.core.utilities.result.Result;
+import com.turkcell.rentACarProject.core.exceptions.BusinessException;
+import com.turkcell.rentACarProject.core.utilities.results.DataResult;
+import com.turkcell.rentACarProject.core.utilities.results.Result;
 
-@Service
 public interface CarMaintenanceService {
 	
 	DataResult<List<ListCarMaintenanceDto>> getAll();
-	DataResult<List<GetCarMaintenanceDto>> getByCarId(int carId);
-	
-	Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest);
-	Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest);
+	DataResult<List<ListCarMaintenanceDto>> getAllByCarId(int id);
+	Result create(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException;
 	Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest);
-
+	Result delete(int id);
+	Result isCarInMaintenance(int carId) throws BusinessException;
 }
