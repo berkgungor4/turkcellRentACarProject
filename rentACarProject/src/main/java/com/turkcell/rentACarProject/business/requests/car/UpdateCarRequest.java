@@ -15,5 +15,4 @@ public class UpdateCarRequest {
 	private String description;
 	private int brandId;
 	private int colorId;
-	
 }
