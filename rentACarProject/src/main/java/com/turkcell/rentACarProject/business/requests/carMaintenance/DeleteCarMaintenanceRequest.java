@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeleteCarMaintenanceRequest {
-
-    private int id;
 	
+	private int id; 
 }

@@ -13,11 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateCarMaintenanceRequest {
 	
-    private int id;
-    private String description;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate returnDate;
-    private int carId;
-    
+	private int id;
+	private String description;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate returnDate;
+	private int carId;
 }

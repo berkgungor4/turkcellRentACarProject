@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateCarMaintenanceRequest {
 	
-    private String description;
-    private int carId;
-    
+	private int carId;
+	private String description; 
 }
