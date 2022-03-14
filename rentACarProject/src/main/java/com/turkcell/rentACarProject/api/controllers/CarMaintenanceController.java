@@ -2,8 +2,6 @@ package com.turkcell.rentACarProject.api.controllers;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,51 +9,51 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.rentACarProject.business.abstracts.CarMaintenanceService;
-import com.turkcell.rentACarProject.business.dtos.carMaintenance.GetCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.dtos.carMaintenance.ListCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.CreateCarMaintenanceRequest;
-import com.turkcell.rentACarProject.business.requests.carMaintenance.DeleteCarMaintenanceRequest;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.UpdateCarMaintenanceRequest;
-import com.turkcell.rentACarProject.core.utilities.result.DataResult;
-import com.turkcell.rentACarProject.core.utilities.result.Result;
+import com.turkcell.rentACarProject.core.exceptions.BusinessException;
+import com.turkcell.rentACarProject.core.utilities.results.DataResult;
+import com.turkcell.rentACarProject.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/carMaintenances")
 public class CarMaintenanceController {
+	
 
 	private CarMaintenanceService carMaintenanceService;
 	
 	@Autowired
-	public CarMaintenanceController(CarMaintenanceService carMaintenanceService){
-		this.carMaintenanceService=carMaintenanceService;
-	}
-	
-	@GetMapping("/getall")
-	public DataResult<List<ListCarMaintenanceDto>> getAll(){
-			return	this.carMaintenanceService.getAll();
+	public CarMaintenanceController(CarMaintenanceService carMaintenanceService) {
+		this.carMaintenanceService = carMaintenanceService;
 	}
 	
 	@PostMapping("/create")
-	public Result add(@RequestBody @Valid CreateCarMaintenanceRequest createCarMaintenanceRequest) {
-		return this.carMaintenanceService.add(createCarMaintenanceRequest);
-	}
-	
-	@DeleteMapping("/delete")
-	public Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
-		return this.carMaintenanceService.delete(deleteCarMaintenanceRequest);
+	public Result add(@RequestBody CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException{
+		return this.carMaintenanceService.create(createCarMaintenanceRequest);
 	}
 	
 	@PutMapping("/update")
-	public Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
+	public Result update(@RequestBody UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
 		return this.carMaintenanceService.update(updateCarMaintenanceRequest);
 	}
-	
-	@GetMapping("/getByCarId")
-	public DataResult<List<GetCarMaintenanceDto>> getByCarId(int carId){
-		return this.carMaintenanceService.getByCarId(carId);
+
+	@GetMapping("/getAll")
+	public DataResult<List<ListCarMaintenanceDto>> getAll() {
+		return this.carMaintenanceService.getAll();
 	}
 	
+	@GetMapping("/getAllByCarId")
+	public DataResult<List<ListCarMaintenanceDto>> getAllByCarId(@RequestParam int id) {
+		return this.carMaintenanceService.getAllByCarId(id);
+	}
+	
+	@DeleteMapping("/delete")
+	public Result delete(@RequestParam int id) {
+		return this.carMaintenanceService.delete(id);
+	}
 }
