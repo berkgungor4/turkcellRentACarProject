@@ -7,20 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.CarService;
-import com.turkcell.rentACarProject.business.dtos.GetCarDto;
-import com.turkcell.rentACarProject.business.dtos.ListCarDto;
+import com.turkcell.rentACarProject.business.dtos.car.ListCarDto;
 import com.turkcell.rentACarProject.business.requests.car.CreateCarRequest;
 import com.turkcell.rentACarProject.business.requests.car.DeleteCarRequest;
 import com.turkcell.rentACarProject.business.requests.car.UpdateCarRequest;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
-import com.turkcell.rentACarProject.core.utilities.result.DataResult;
-import com.turkcell.rentACarProject.core.utilities.result.Result;
-import com.turkcell.rentACarProject.core.utilities.result.SuccessDataResult;
-import com.turkcell.rentACarProject.core.utilities.result.SuccessResult;
+import com.turkcell.rentACarProject.core.utilities.results.DataResult;
+import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.Result;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessResult;
 import com.turkcell.rentACarProject.dataAccess.abstracts.CarDao;
 import com.turkcell.rentACarProject.entities.concretes.Car;
 
@@ -42,21 +41,15 @@ public class CarManager implements CarService {
 		List<ListCarDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, ListCarDto.class))
 				.collect(Collectors.toList());
+		
 		return new SuccessDataResult<List<ListCarDto>>(response);
 	}
-	
-	@Override
-	public DataResult<GetCarDto> getById(int id) {
-		Car result = this.carDao.getCarById(id);
-		GetCarDto response = this.modelMapperService.forDto().map(result, GetCarDto.class);
-		return new SuccessDataResult<GetCarDto>(response);
-	}
-	
+
 	@Override
 	public Result create(CreateCarRequest createCarRequest) {
 		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
 		this.carDao.save(car);
-		return new SuccessResult("Car.Created");
+		return new SuccessResult("Car.Added");
 	}
 
 	@Override
@@ -64,6 +57,7 @@ public class CarManager implements CarService {
 		Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
 		this.carDao.delete(car);
 		return new SuccessResult("Car.Deleted");
+		
 	}
 
 	@Override
@@ -71,42 +65,70 @@ public class CarManager implements CarService {
 		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
 		this.carDao.save(car);
 		return new SuccessResult("Car.Updated");
+		
 	}
 
 	@Override
-	public DataResult<List<ListCarDto>> getAllSorted(Direction direction) {
-		Sort sort = Sort.by(direction, "dailyPrice");
+	public DataResult<ListCarDto> getById(int id) {
 		
-		List<Car> result = this.carDao.findAll(sort);
-		List<ListCarDto> response = result.stream()
-				.map(car->this.modelMapperService.forDto().map(car, ListCarDto.class))
-				.collect(Collectors.toList());
+		Car result = this.carDao.getCarById(id);
 		
-		return new SuccessDataResult<List<ListCarDto>>(response);
+		if(result == null) {
+			
+			return new ErrorDataResult<ListCarDto>("Car.NotFound");
+		}
+		
+		ListCarDto response = this.modelMapperService.forDto().map(result, ListCarDto.class);
+		
+		return new SuccessDataResult<ListCarDto>(response);
 	}
 
 	@Override
 	public DataResult<List<ListCarDto>> getAllPaged(int pageNo, int pageSize) {
+		
 		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
 		
 		List<Car> result = this.carDao.findAll(pageable).getContent();
 		
 		List<ListCarDto> response = result.stream()
-				.map(car->this.modelMapperService.forDto().map(car, ListCarDto.class))
+				.map(car -> this.modelMapperService.forDto()
+				.map(car, ListCarDto.class))
 				.collect(Collectors.toList());
 		
 		return new SuccessDataResult<List<ListCarDto>>(response);
 	}
 
+
 	@Override
-	public DataResult<List<ListCarDto>> getByDailyPriceLessThanEqual(double dailyPrice) {
-		var result = this.carDao.getByDailyPriceLessThanEqual(dailyPrice);
+	public DataResult<List<ListCarDto>> getAllByDailyPriceLessThanEqual(double dailyPrice) {
+		
+		
+		List<Car> result = this.carDao.getAllByDailyPriceLessThanEqual(dailyPrice);
 		
 		List<ListCarDto> response = result.stream()
-				.map(car->this.modelMapperService.forDto().map(car, ListCarDto.class))
+				.map(car -> this.modelMapperService.forDto()
+				.map(car, ListCarDto.class))
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<ListCarDto>>(response, "Data.Listed");
+		return new SuccessDataResult<List<ListCarDto>>(response);
 	}
+
+	
+	@Override
+	public DataResult<List<ListCarDto>> getAllSorted(Sort.Direction direction) {
+		
+		Sort sort = Sort.by(direction, "dailyPrice");
+		
+		List<Car> result = this.carDao.findAll(sort);
+		
+		List<ListCarDto> response = result.stream()
+				.map(car -> this.modelMapperService.forDto()
+				.map(car, ListCarDto.class))
+				.collect(Collectors.toList());
+		
+		return new SuccessDataResult<>(response);
+	}
+
+
 
 }

@@ -1,139 +1,111 @@
 package com.turkcell.rentACarProject.business.concretes;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-
+import com.turkcell.rentACarProject.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentACarProject.business.abstracts.RentalService;
-import com.turkcell.rentACarProject.business.dtos.carMaintenance.ListCarMaintenanceDto;
-import com.turkcell.rentACarProject.business.dtos.rental.GetRentalDto;
 import com.turkcell.rentACarProject.business.dtos.rental.ListRentalDto;
 import com.turkcell.rentACarProject.business.requests.rental.CreateRentalRequest;
 import com.turkcell.rentACarProject.business.requests.rental.DeleteRentalRequest;
 import com.turkcell.rentACarProject.business.requests.rental.UpdateRentalRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
-import com.turkcell.rentACarProject.core.utilities.result.*;
-import com.turkcell.rentACarProject.dataAccess.abstracts.CarDao;
-import com.turkcell.rentACarProject.dataAccess.abstracts.CarMaintenanceDao;
+import com.turkcell.rentACarProject.core.utilities.results.DataResult;
+import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.Result;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessResult;
 import com.turkcell.rentACarProject.dataAccess.abstracts.RentalDao;
-import com.turkcell.rentACarProject.entities.concretes.Car;
-import com.turkcell.rentACarProject.entities.concretes.CarMaintenance;
 import com.turkcell.rentACarProject.entities.concretes.Rental;
 
 @Service
 public class RentalManager implements RentalService {
-	
+
 	private RentalDao rentalDao;
-	private CarMaintenanceDao carMaintenanceDao;
-	private CarDao carDao;
 	private ModelMapperService modelMapperService;
+	private CarMaintenanceService carMaintenanceService;
 	
 	@Autowired
-	public RentalManager(RentalDao rentalDao, CarMaintenanceDao carMaintenanceDao, CarDao carDao, ModelMapperService modelMapperService) {
-		this.rentalDao=rentalDao;
-		this.carMaintenanceDao=carMaintenanceDao;
-		this.carDao = carDao;
-		this.modelMapperService=modelMapperService;
+	public RentalManager(RentalDao rentalDao, ModelMapperService modelMapperService,
+			@Lazy CarMaintenanceService carMaintenanceService) {
+		this.rentalDao = rentalDao;
+		this.modelMapperService = modelMapperService;
+		this.carMaintenanceService = carMaintenanceService;
 	}
 	
 	@Override
 	public DataResult<List<ListRentalDto>> getAll() {
 		
 		var result = this.rentalDao.findAll();
-		
 		List<ListRentalDto> response = result.stream()
-				.map(carRental -> modelMapperService.forDto().map(carRental, ListRentalDto.class))
+				.map(rental -> this.modelMapperService.forDto().map(rental, ListRentalDto.class))
 				.collect(Collectors.toList());
 		
 		return new SuccessDataResult<List<ListRentalDto>>(response);
 	}
 
 	@Override
-	public DataResult<GetRentalDto> getById(int id) {
+	public DataResult<ListRentalDto> getById(int id) {
+
+		Rental result = this.rentalDao.getById(id);
 		
-		Rental rental = rentalDao.getById(id);
-		if (rental != null) {
-			GetRentalDto response = modelMapperService.forDto().map(rental, GetRentalDto.class);
-			return new SuccessDataResult<GetRentalDto>(response);
+		if(result == null) {
+			return new ErrorDataResult<ListRentalDto>("CarRental.NotFound");
 		}
-		return new ErrorDataResult<GetRentalDto>("CarRental.NotFound");
+		
+		ListRentalDto response = this.modelMapperService.forDto().map(result, ListRentalDto.class);
+		return new SuccessDataResult<ListRentalDto>(response);
 	}
 
 	@Override
-	public DataResult<List<GetRentalDto>> getByCarId(int id) {
-		
-        Car car = this.carDao.getById(id);
-
-        List<Rental> result = this.rentalDao.getRentalsByCarId(car);
-
-        List<GetRentalDto> response = result.stream()
-        		.map(rental -> this.modelMapperService.forDto().map(rental, GetRentalDto.class))
-        		.collect(Collectors.toList());
-
-        return new SuccessDataResult<List<GetRentalDto>>(response);
+	public Result create(CreateRentalRequest createRentalRequest) throws BusinessException{
+	  
+		carMaintenanceService.isCarInMaintenance(createRentalRequest.getCarId());
+	   
+	    Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
+	    this.rentalDao.save(rental);
+	    
+	    return new SuccessResult("The rental information of the vehicle with id" +createRentalRequest.getCarId()+ "has been added from the database.");
 	}
 
 	@Override
-	public Result add(CreateRentalRequest createRentalRequest) {
-		
-		Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
-		
-        if (checkCarIdExist(rental.getCarId())) {
-            if (checkIsUnderMaintenance(rental)) {
-                this.rentalDao.save(rental);
-
-                return new SuccessResult("The rental information of the vehicle with id" +createRentalRequest.getCarId()+ "has been updated from the database.");
-            }
-            return new ErrorResult("Rental can't be added (Car is under maintenance at requested times)" + rental);
-        }
-        return new ErrorResult("Rental with given carId doesn't exists." + rental);
+	public Result delete(DeleteRentalRequest deleteRentalRequest) {
+		Rental rental = this.modelMapperService.forRequest().map(deleteRentalRequest, Rental.class);
+		this.rentalDao.delete(rental);
+		return new SuccessResult("The rental information of the vehicle with id "+deleteRentalRequest.getId()+" has been deleted from the database.");
 	}
 
 	@Override
 	public Result update(UpdateRentalRequest updateRentalRequest) {
 		
 		Rental rental = this.modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
-
-		if (!checkIsUnderMaintenance(rental)) {
-			return new ErrorResult("CarRental.NotUpdated , Car is under maintenance at requested times");
-		}
+		rentalCalculation(updateRentalRequest);
 		this.rentalDao.save(rental);
 		return new SuccessResult("The rental information of the vehicle with id "+updateRentalRequest.getCarId()+" has been updated from the database.");
 	}
+	
+	@Override
+	public Result isCarRented(int id) throws BusinessException {
+		
+		if(this.rentalDao.findByCarIdAndReturnDateIsNull(id) != null) {
+			throw new BusinessException("Rental can't be added (Car is under maintenance at requested times)");
+		}
+		else
+			return new SuccessResult();
+	}
 
 	@Override
-	public Result delete(DeleteRentalRequest deleteRentalRequest) {
+	public Result rentalCalculation(UpdateRentalRequest updateRentalRequest) {
 		
-		Rental rental = this.modelMapperService.forRequest().map(deleteRentalRequest, Rental.class);
+		if(updateRentalRequest.getInitialCityId() != updateRentalRequest.getReturnCityId()) {
+			updateRentalRequest.setAdditionalPrice(updateRentalRequest.getAdditionalPrice() + 750);
+		}
 		
-        this.rentalDao.deleteById(rental.getId());
-        
-        return new SuccessResult("The rental information of the vehicle with id "+deleteRentalRequest.getId()+" has been deleted from the database.");
-
+		return new SuccessResult();
 	}
-	
-	private boolean checkIsUnderMaintenance(Rental rental) {
-        List<CarMaintenance> result = this.carMaintenanceDao.getByCarId(rental.getCarId());
-
-        if (result != null) {
-            for (CarMaintenance carMaintenance : result) {
-                if (rental.getRentDate().isBefore(carMaintenance.getReturnDate())
-                        || rental.getReturnDate().isBefore(carMaintenance.getReturnDate())) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-	
-    private boolean checkCarIdExist(Car car) {
-
-        return Objects.nonNull(carDao.getCarById(car.getId()));
-    }
-
 }

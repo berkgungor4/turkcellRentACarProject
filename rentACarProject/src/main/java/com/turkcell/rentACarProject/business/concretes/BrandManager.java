@@ -7,17 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.BrandService;
-import com.turkcell.rentACarProject.business.dtos.GetBrandDto;
-import com.turkcell.rentACarProject.business.dtos.ListBrandDto;
+import com.turkcell.rentACarProject.business.dtos.brand.ListBrandDto;
 import com.turkcell.rentACarProject.business.requests.brand.CreateBrandRequest;
 import com.turkcell.rentACarProject.business.requests.brand.DeleteBrandRequest;
 import com.turkcell.rentACarProject.business.requests.brand.UpdateBrandRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
-import com.turkcell.rentACarProject.core.utilities.result.DataResult;
-import com.turkcell.rentACarProject.core.utilities.result.Result;
-import com.turkcell.rentACarProject.core.utilities.result.SuccessDataResult;
-import com.turkcell.rentACarProject.core.utilities.result.SuccessResult;
+import com.turkcell.rentACarProject.core.utilities.results.DataResult;
+import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.Result;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessResult;
 import com.turkcell.rentACarProject.dataAccess.abstracts.BrandDao;
 import com.turkcell.rentACarProject.entities.concretes.Brand;
 
@@ -41,30 +41,28 @@ public class BrandManager implements BrandService {
 				.collect(Collectors.toList());
 		return new SuccessDataResult<List<ListBrandDto>>(response);
 	}
-	
+
 	@Override
-	public DataResult<GetBrandDto> getById(int id) throws BusinessException {
+	public DataResult<ListBrandDto> getById(int id) throws BusinessException {
 		Brand result = this.brandDao.getBrandById(id);
-		GetBrandDto response = this.modelMapperService.forDto().map(result, GetBrandDto.class);
-		return new SuccessDataResult<GetBrandDto>(response);
+		if(result==null) {
+			return new ErrorDataResult<ListBrandDto>();
+		}
+		ListBrandDto response = this.modelMapperService.forDto().map(result, ListBrandDto.class);
+		return new SuccessDataResult<ListBrandDto>(response);
 	}
 	
 	@Override
 	public Result create(CreateBrandRequest createBrandRequest) throws BusinessException {
+		
 		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
 		checkIfBrandExists(brand);
 		this.brandDao.save(brand);
 		return new SuccessResult("Brand.Created");
 	}
 
-	void checkIfBrandExists(Brand brand) throws BusinessException {
-		if (this.brandDao.getBrandByName(brand.getName()).stream().count() != 0) {
-			throw new BusinessException("Brand already exists!");
-		}
-	}
-
 	@Override
-	public Result delete(DeleteBrandRequest deleteBrandRequest){
+	public Result delete(DeleteBrandRequest deleteBrandRequest) {
 		Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
 		this.brandDao.delete(brand);
 		return new SuccessResult("Brand.Deleted");
@@ -76,5 +74,10 @@ public class BrandManager implements BrandService {
 		this.brandDao.save(brand);
 		return new SuccessResult("Brand.Updated");
 	}
-	
+
+	void checkIfBrandExists(Brand brand) throws BusinessException {
+		if (this.brandDao.getBrandByName(brand.getName()).stream().count() != 0) {
+			throw new BusinessException("Brand already exists!");
+		}
+	}
 }

@@ -1,64 +1,50 @@
 package com.turkcell.rentACarProject.business.concretes;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.AdditionalServiceService;
 import com.turkcell.rentACarProject.business.dtos.additionalService.ListAdditionalServiceDto;
-import com.turkcell.rentACarProject.business.requests.additonalService.CreateAdditionalServiceRequest;
-import com.turkcell.rentACarProject.business.requests.additonalService.DeleteAdditionalServiceRequest;
-import com.turkcell.rentACarProject.business.requests.additonalService.UpdateAdditionalServiceRequest;
+import com.turkcell.rentACarProject.business.requests.additionalService.CreateAdditionalServiceRequest;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
-import com.turkcell.rentACarProject.core.utilities.result.DataResult;
-import com.turkcell.rentACarProject.core.utilities.result.Result;
-import com.turkcell.rentACarProject.core.utilities.result.SuccessDataResult;
-import com.turkcell.rentACarProject.core.utilities.result.SuccessResult;
+import com.turkcell.rentACarProject.core.utilities.results.DataResult;
+import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.Result;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessResult;
 import com.turkcell.rentACarProject.dataAccess.abstracts.AdditionalServiceDao;
 import com.turkcell.rentACarProject.entities.concretes.AdditionalService;
 
 @Service
 public class AdditionalServiceManager implements AdditionalServiceService {
-	
-	private AdditionalServiceDao additionalServiceDao;
+
 	private ModelMapperService modelMapperService;
-	
+	private AdditionalServiceDao additionalServiceDao;
+
 	@Autowired
-	public AdditionalServiceManager(AdditionalServiceDao additionalServiceDao, ModelMapperService modelMapperService) {
-		this.additionalServiceDao = additionalServiceDao;
+	public AdditionalServiceManager(ModelMapperService modelMapperService,
+			AdditionalServiceDao additionalServiceDao) {
+
 		this.modelMapperService = modelMapperService;
+		this.additionalServiceDao = additionalServiceDao;
 	}
 
 	@Override
-	public DataResult<List<ListAdditionalServiceDto>> getAll() {
-		var result = this.additionalServiceDao.findAll();
-		List<ListAdditionalServiceDto> response = result.stream()
-				.map(additonalService -> this.modelMapperService.forDto().map(additonalService, ListAdditionalServiceDto.class))
-				.collect(Collectors.toList());
-		return new SuccessDataResult<List<ListAdditionalServiceDto>>(response);
-	}
-
-	@Override
-	public Result create(CreateAdditionalServiceRequest createAdditionalServiceRequest) {
+	public Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest) {
 		AdditionalService additionalService = this.modelMapperService.forRequest().map(createAdditionalServiceRequest, AdditionalService.class);
 		this.additionalServiceDao.save(additionalService);
-		return new SuccessResult("AdditionalService.Created");
+		return new SuccessResult("");
 	}
 
 	@Override
-	public Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest) {
-		AdditionalService additionalService = this.modelMapperService.forRequest().map(deleteAdditionalServiceRequest, AdditionalService.class);
-		this.additionalServiceDao.delete(additionalService);
-		return new SuccessResult("AdditionalService.Deleted");
+	public DataResult<ListAdditionalServiceDto> findById(int id) {
+		if(additionalServiceDao.existsById(id)) {
+			AdditionalService additionalService = additionalServiceDao.findById(id).get();
+			ListAdditionalServiceDto response = modelMapperService.forDto().map(additionalService, ListAdditionalServiceDto.class);
+			return new SuccessDataResult<ListAdditionalServiceDto>(response);
+		}else return new ErrorDataResult<ListAdditionalServiceDto>();
 	}
 
-	@Override
-	public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
-		AdditionalService additionalService = this.modelMapperService.forRequest().map(updateAdditionalServiceRequest, AdditionalService.class);
-		this.additionalServiceDao.save(additionalService);
-		return new SuccessResult("AdditionalService.Updated");
-	}
-
+	
+	
 }

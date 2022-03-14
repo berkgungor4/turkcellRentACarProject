@@ -7,17 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.ColorService;
-import com.turkcell.rentACarProject.business.dtos.GetColorDto;
-import com.turkcell.rentACarProject.business.dtos.ListColorDto;
+import com.turkcell.rentACarProject.business.dtos.color.ListColorDto;
 import com.turkcell.rentACarProject.business.requests.color.CreateColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.DeleteColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.UpdateColorRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
-import com.turkcell.rentACarProject.core.utilities.result.DataResult;
-import com.turkcell.rentACarProject.core.utilities.result.Result;
-import com.turkcell.rentACarProject.core.utilities.result.SuccessDataResult;
-import com.turkcell.rentACarProject.core.utilities.result.SuccessResult;
+import com.turkcell.rentACarProject.core.utilities.results.DataResult;
+import com.turkcell.rentACarProject.core.utilities.results.Result;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessDataResult;
+import com.turkcell.rentACarProject.core.utilities.results.SuccessResult;
 import com.turkcell.rentACarProject.dataAccess.abstracts.ColorDao;
 import com.turkcell.rentACarProject.entities.concretes.Color;
 
@@ -43,10 +42,10 @@ public class ColorManager implements ColorService {
 	}
 	
 	@Override
-	public DataResult<GetColorDto> getById(int id) {
+	public DataResult<ListColorDto> getById(int id) {
 		Color result = this.colorDao.getColorById(id);
-		GetColorDto response = this.modelMapperService.forDto().map(result, GetColorDto.class);
-		return new SuccessDataResult<GetColorDto>(response);
+		ListColorDto response = this.modelMapperService.forDto().map(result, ListColorDto.class);
+		return new SuccessDataResult<ListColorDto>(response);
 	}
 	
 	@Override
@@ -55,12 +54,6 @@ public class ColorManager implements ColorService {
 		checkIfColorExists(color);
 		this.colorDao.save(color);
 		return new SuccessResult("Color.Created");
-	}
-
-	void checkIfColorExists(Color color) throws BusinessException {
-		if (this.colorDao.getColorByName(color.getName()).stream().count() != 0) {
-			throw new BusinessException("Color already exists.");
-		}
 	}
 
 	@Override
@@ -75,6 +68,12 @@ public class ColorManager implements ColorService {
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
 		this.colorDao.save(color);
 		return new SuccessResult("Color.Updated");
+	}
+	
+	void checkIfColorExists(Color color) throws BusinessException {
+		if (this.colorDao.getColorByName(color.getName()).stream().count() != 0) {
+			throw new BusinessException("Color already exists.");
+		}
 	}
 	
 }
