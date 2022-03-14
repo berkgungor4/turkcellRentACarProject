@@ -24,6 +24,6 @@ public class IndividualCustomer extends Customer {
 	private String lastName;
 	
 	@Column(name="identity_number")
-	private int identityNumber;
+	private String identityNumber;
     
 }
