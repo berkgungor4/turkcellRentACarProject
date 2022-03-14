@@ -13,5 +13,4 @@ public interface BrandDao extends JpaRepository<Brand, Integer>{
 	Brand getBrandById(int id);
 	
 	List<Brand> getBrandByName(String name);
-	
 }
