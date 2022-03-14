@@ -2,13 +2,11 @@ package com.turkcell.rentACarProject.entities.concretes;
 
 import java.util.List;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -17,23 +15,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "additional_services")
-public class AdditionalService { 
+@Table(name="cities")
+public class City {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id") 
-	private int id; 
+	@Column(name = "id")
+	private int id;
 	
-	@Column(name="name") 
+	@Column(name = "name")
 	private String name;
 	
-	@Column(name="daily_price") 
-	private double dailyPrice;
+	@OneToMany(mappedBy= "initialCity")
+	private List<Rental> initialCity;
 	
-	@OneToMany(mappedBy = "additionalService")
-	private List<OrderedAdditionalService> additionalService;
+	@OneToMany(mappedBy= "returnCity")
+	private List<Rental> returnCity;
+	
 }
