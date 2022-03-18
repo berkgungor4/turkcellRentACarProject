@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -57,4 +58,12 @@ public class Rental {
     @JoinColumn(name = "return_city_id")
     private City returnCity;
     
+    @Column(name = "initial_mileage")
+    private Integer initialMileage;
+    
+    @Column(name = "return_mileage")
+    private Integer returnMileage;
+    
+    @OneToOne(mappedBy = "rental")
+    private Invoice invoice;
 }
