@@ -41,7 +41,7 @@ public class RentalManager implements RentalService {
 	@Autowired
 	public RentalManager(RentalDao rentalDao, ModelMapperService modelMapperService, 
 			@Lazy CarMaintenanceService carMaintenanceService, CarService carService, 
-			OrderedAdditionalServiceService orderedAdditionalServiceService, 
+			@Lazy OrderedAdditionalServiceService orderedAdditionalServiceService, 
 			AdditionalServiceService additionalServiceService) {
 		
 		this.rentalDao = rentalDao;
@@ -108,9 +108,9 @@ public class RentalManager implements RentalService {
 	@Override
 	public Result update(UpdateRentalRequest updateRentalRequest) {
 		
-
 		Rental rental = this.modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
-		rental.setAdditionalPrice(rentalCalculation(rental));;
+		rental.setAdditionalPrice(rentalCalculation(rental));
+		updateReturnMileage(rental);
 		this.rentalDao.save(rental);
 		return new SuccessResult("The rental information of the vehicle with id "+updateRentalRequest.getCarId()+" has been updated from the database.");
 	}
@@ -148,5 +148,17 @@ public class RentalManager implements RentalService {
 		totalPrice += days * carService.getById(rental.getCar().getId()).getData().getDailyPrice();
 
 		return totalPrice;
+	}
+	
+	private int mileageCalculation(Rental rental) {
+		
+		int difference = rental.getReturnMileage() - rental.getInitialMileage();
+		return difference;
+		
+	}
+
+	private void updateReturnMileage(Rental rental) {
+		
+		carService.getById(rental.getCar().getId()).getData().setMileage(rental.getReturnMileage());
 	}
 }
