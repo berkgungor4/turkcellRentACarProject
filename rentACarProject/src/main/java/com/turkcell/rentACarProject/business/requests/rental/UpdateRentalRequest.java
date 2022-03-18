@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 public class UpdateRentalRequest {
 
+	private int id;
     private int carId;
     private double additionalPrice;
     
@@ -26,6 +27,8 @@ public class UpdateRentalRequest {
     private int initialCityId;
     private int returnCityId;
     private int customerId;
+    private int initialMileage;
+    private int returnMileage;
 
 }
 
