@@ -22,4 +22,5 @@ public interface CarService {
 	DataResult<List<ListCarDto>> getAllPaged(int pageNo, int pageSize);
 	DataResult<List<ListCarDto>> getAllByDailyPriceLessThanEqual(double dailyPrice);
 	DataResult<List<ListCarDto>> getAllSorted(Sort.Direction direction);
+
 }
