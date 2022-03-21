@@ -18,6 +18,5 @@ public class CreateRentalRequest {
     private int customerId;
     private int carId;
     private int initialCityId;
-    private int initialMileage;
     private int returnMileage;
 }
