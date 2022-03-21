@@ -13,7 +13,7 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 public interface BrandService {
 
 	DataResult<List<ListBrandDto>> getAll();
-	DataResult<ListBrandDto> getById(int id) throws BusinessException;
+	DataResult<ListBrandDto> getById(int id);
 	
 	Result create(CreateBrandRequest createBrandRequest) throws BusinessException;
 	Result delete(DeleteBrandRequest deleteBrandRequest);
