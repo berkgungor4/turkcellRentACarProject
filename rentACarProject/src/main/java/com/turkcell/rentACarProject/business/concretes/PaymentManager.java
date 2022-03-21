@@ -64,14 +64,14 @@ public class PaymentManager implements PaymentService {
 	private void checkPaymentInvoiceExists(int id) {
 		
 		if(this.paymentDao.getByInvoice_invoiceId(id)!=null) {
-			throw new BusinessException("Can find an invoice with this payment id");
+			throw new BusinessException("Invoice with this id");
 		}
 	}
 	
 	private void checkPaymentOrderedAdditionalServiceExists(int id) {
 		
 		if(this.paymentDao.getByOrderedAdditionalService_orderedAdditionalServiceId(id)!=null) {
-			throw new BusinessException("Can find an ordered additional service with this payment id");
+			throw new BusinessException("Ordered additional service with this id");
 		}
 	}
 	
