@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -18,22 +17,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="additional_services")
-public class OrderedAdditionalService {
-
+@Table(name="car_damages")
+	
+public class CarDamage {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id") 	
+	@Column(name = "id")
 	private int id;
 	
-	@ManyToOne
-	@JoinColumn(name = "additional_service_id") 
-	private AdditionalService additionalService;	
+	@Column(name = "description")
+	private String description;
 	
 	@ManyToOne
-	@JoinColumn(name = "rental_id")  
-	private Rental rental; 
-	
-	@OneToOne(mappedBy = "orderedAdditionalService")
-	private Payment payment;
+	@JoinColumn(name= "car_id")
+	private Car car;
 }

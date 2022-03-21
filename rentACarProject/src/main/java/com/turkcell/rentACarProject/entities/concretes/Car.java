@@ -53,4 +53,7 @@ public class Car {
 	
 	@Column(name = "mileage")
 	private Integer mileage;
+	
+	@OneToMany(mappedBy = "car") 
+	private List<CarDamage> carDamages;
 }
