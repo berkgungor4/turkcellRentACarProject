@@ -93,6 +93,7 @@ public class RentalManager implements RentalService {
 		carMaintenanceService.isCarInMaintenance(createRentalRequest.getCarId());
 		   
 	    Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
+	    rental.setInitialMileage(this.carService.getById(createRentalRequest.getCarId()).getData().getMileage());
 	    this.rentalDao.save(rental);
 	    
 	    return new SuccessResult("The rental information of the vehicle with id" +createRentalRequest.getCarId()+ "has been added from the database.");
@@ -110,9 +111,10 @@ public class RentalManager implements RentalService {
 		
 		Rental rental = this.modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
 		rental.setAdditionalPrice(rentalCalculation(rental));
-		updateReturnMileage(rental);
+		rental.getCar().setMileage(updateRentalRequest.getReturnMileage());
+		updateReturnMileage(rental, updateRentalRequest);
 		this.rentalDao.save(rental);
-		return new SuccessResult("The rental information of the vehicle with id "+updateRentalRequest.getCarId()+" has been updated from the database.");
+		return new SuccessResult("The rental updated from the database.");
 	}
 	
 	@Override
@@ -150,15 +152,9 @@ public class RentalManager implements RentalService {
 		return totalPrice;
 	}
 	
-	private int mileageCalculation(Rental rental) {
-		
-		int difference = rental.getReturnMileage() - rental.getInitialMileage();
-		return difference;
-		
-	}
 
-	private void updateReturnMileage(Rental rental) {
+	private void updateReturnMileage(Rental rental, UpdateRentalRequest updateRentalRequest) {
 		
-		carService.getById(rental.getCar().getId()).getData().setMileage(rental.getReturnMileage());
+		rental.setReturnMileage(updateRentalRequest.getReturnMileage());
 	}
 }

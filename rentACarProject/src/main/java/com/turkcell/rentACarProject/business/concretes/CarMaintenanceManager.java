@@ -41,7 +41,7 @@ public class CarMaintenanceManager implements CarMaintenanceService{
 	public DataResult<List<ListCarMaintenanceDto>> getAll() {
 		var result = this.carMaintenanceDao.findAll();
 		List<ListCarMaintenanceDto> response = result.stream()
-				.map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenanceDao, ListCarMaintenanceDto.class))
+				.map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, ListCarMaintenanceDto.class))
 				.collect(Collectors.toList());
 		
 		return new SuccessDataResult<List<ListCarMaintenanceDto>>(response);
@@ -58,7 +58,7 @@ public class CarMaintenanceManager implements CarMaintenanceService{
         return new SuccessDataResult<List<ListCarMaintenanceDto>>(response);
     }
 	@Override
-	public Result create(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException{
+	public Result create(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
 		
 		rentalService.isCarRented(createCarMaintenanceRequest.getCarId());
 		
