@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import com.turkcell.rentACarProject.business.abstracts.CorporateCustomerService;
 import com.turkcell.rentACarProject.business.dtos.corporateCustomer.ListCorporateCustomerDto;
 import com.turkcell.rentACarProject.business.requests.corporateCustomer.CreateCorporateCustomerRequest;
+import com.turkcell.rentACarProject.business.requests.corporateCustomer.DeleteCorporateCustomerRequest;
+import com.turkcell.rentACarProject.business.requests.corporateCustomer.UpdateCorporateCustomerRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
-import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 import com.turkcell.rentACarProject.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentACarProject.core.utilities.results.SuccessResult;
@@ -46,24 +47,50 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	@Override
 	public DataResult<ListCorporateCustomerDto> getById(int id) {
 
+		checkIfCorporateCustomerExists(id);
+		
 		CorporateCustomer result = this.corporateCustomerDao.getById(id);
 		
-		if(result == null) {
-			return new ErrorDataResult<ListCorporateCustomerDto>("Car.NotFound");
-		}
-		ListCorporateCustomerDto response = this.modelMapperService.forDto().map(result, ListCorporateCustomerDto.class);		
+		ListCorporateCustomerDto response = this.modelMapperService.forDto().map(result, ListCorporateCustomerDto.class);
 		
-		return new SuccessDataResult<ListCorporateCustomerDto>(response);
+		return new SuccessDataResult<ListCorporateCustomerDto>(response, "BusinessMessages.SUCCESS");
 	}
 
 	@Override
-	public Result create(CreateCorporateCustomerRequest createCorporateCustomerRequest) throws BusinessException {
+	public Result create(CreateCorporateCustomerRequest createCorporateCustomerRequest) {
 		
-		CorporateCustomer customer = this.modelMapperService.forRequest().map(createCorporateCustomerRequest, CorporateCustomer.class);
+		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(createCorporateCustomerRequest, CorporateCustomer.class);
 		
-		this.corporateCustomerDao.save(customer);
+		this.corporateCustomerDao.save(corporateCustomer);
 		
 		return new SuccessResult("CorporateCustomer.Added");
 	}
 
+	@Override
+	public Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) {
+		
+		checkIfCorporateCustomerExists(updateCorporateCustomerRequest.getId());
+		
+		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest()
+				.map(updateCorporateCustomerRequest, CorporateCustomer.class);
+			this.corporateCustomerDao.save(corporateCustomer);
+			 
+		return new SuccessResult("BusinessMessages.CORPORATECUSTOMERUPDATED");
+	}
+
+	@Override
+	public Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) {
+		
+		this.corporateCustomerDao.deleteById(deleteCorporateCustomerRequest.getId());
+		
+		return new SuccessResult("BusinessMessages.CORPORATECUSTOMERDELETED");
+	}
+	
+	private void checkIfCorporateCustomerExists(int id) {
+		
+		if (!this.corporateCustomerDao.existsById(id)) {
+			
+			throw new BusinessException("Messages.CORPORATECUSTOMERNOTFOUND");
+		}
+	}
 }

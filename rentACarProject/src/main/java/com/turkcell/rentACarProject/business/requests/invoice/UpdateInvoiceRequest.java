@@ -12,9 +12,5 @@ import lombok.NoArgsConstructor;
 public class UpdateInvoiceRequest {
 	
 	private int id;
-	private String invoiceNumber;
 	private LocalDate creationDate;
-	private int numberOfDaysRented;
-	private int rentalId;
-	private int customerId;
 }

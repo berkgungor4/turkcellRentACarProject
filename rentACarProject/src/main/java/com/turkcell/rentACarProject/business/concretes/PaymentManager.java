@@ -6,11 +6,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.turkcell.rentACarProject.business.abstracts.InvoiceService;
+import com.turkcell.rentACarProject.business.abstracts.OrderedAdditionalServiceService;
 import com.turkcell.rentACarProject.business.abstracts.PaymentService;
+import com.turkcell.rentACarProject.business.abstracts.PosService;
 import com.turkcell.rentACarProject.business.dtos.payment.ListPaymentDto;
 import com.turkcell.rentACarProject.business.requests.payment.CreatePaymentRequest;
+import com.turkcell.rentACarProject.business.requests.payment.DeletePaymentRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
-import com.turkcell.rentACarProject.core.posServices.FakeIsBankService;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
@@ -24,13 +27,17 @@ public class PaymentManager implements PaymentService {
 	
 	private PaymentDao paymentDao;
 	private ModelMapperService modelMapperService;
-	private FakeIsBankService fakeIsBankService;
+	private InvoiceService invoiceService;
+	private OrderedAdditionalServiceService orderedAdditionalServiceService;
+	private PosService posService;
 
 	@Autowired
-	public PaymentManager(PaymentDao paymentDao, ModelMapperService modelMapperService, FakeIsBankService fakeIsBankService) {
+	public PaymentManager(PaymentDao paymentDao, ModelMapperService modelMapperService,InvoiceService invoiceService, OrderedAdditionalServiceService orderedAdditionalServiceService, PosService posService) {
 		this.paymentDao = paymentDao;
 		this.modelMapperService = modelMapperService;
-		this.fakeIsBankService = fakeIsBankService;
+		this.invoiceService = invoiceService;
+		this.orderedAdditionalServiceService = orderedAdditionalServiceService;
+		this.posService = posService;
 	}
 
 	@Override
@@ -44,36 +51,77 @@ public class PaymentManager implements PaymentService {
 
 		return new SuccessDataResult<List<ListPaymentDto>>(response);
 	}
-
+	
 	@Override
-	public Result fakeIsBankAdd(CreatePaymentRequest createPaymentRequest) {
+	public DataResult<ListPaymentDto> getById(int id) {
 		
-		checkPaymentInvoiceExists(createPaymentRequest.getInvoiceId());
-		
-		checkPaymentOrderedAdditionalServiceExists(createPaymentRequest.getOrderedAdditionalServiceId());
-		
-		this.fakeIsBankService.payments(createPaymentRequest.getCardOwnerName(), createPaymentRequest.getCardNumber(), createPaymentRequest.getCardCvvNumber());
+		Payment result = checkIfPaymentExists(id);
 
+		ListPaymentDto response = this.modelMapperService.forDto().map(result, ListPaymentDto.class);
+
+		return new SuccessDataResult<ListPaymentDto>(response, "BusinessMessages.SUCCESS");
+		
+	}
+	
+	@Override
+	public Result create(CreatePaymentRequest createPaymentRequest) {
+		
+		checkIfInvoiceExists(createPaymentRequest.getInvoiceId());
+		
+		checkPaymentIfInvoiceExists(createPaymentRequest.getInvoiceId());
+		
+		checkIfOrderedAdditionalServiceExists(createPaymentRequest.getOrderedAdditionalServiceId());
+		
+		this.posService.payments(createPaymentRequest.getCreateCreditCard().getCardOwnerName(), createPaymentRequest.getCreateCreditCard().getCardNumber(), createPaymentRequest.getCreateCreditCard().getCardCvvNumber());
+		
 		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
 		
+		payment.setId(0);
+
 		this.paymentDao.save(payment);
 
-		return new SuccessResult("Payment.Added ");
+		return new SuccessResult("BusinessMessages.PAYMENTADDED");
 	}
-	
-	private void checkPaymentInvoiceExists(int id) {
-		
-		if(this.paymentDao.getByInvoice_invoiceId(id)!=null) {
-			throw new BusinessException("Invoice with this id");
-		}
-	}
-	
-	private void checkPaymentOrderedAdditionalServiceExists(int id) {
-		
-		if(this.paymentDao.getByOrderedAdditionalService_orderedAdditionalServiceId(id)!=null) {
-			throw new BusinessException("Ordered additional service with this id");
-		}
-	}
-	
 
+	@Override
+	public Result delete(DeletePaymentRequest deletePaymentRequest) {
+		
+		checkIfPaymentExists(deletePaymentRequest.getId());
+
+		this.paymentDao.deleteById(deletePaymentRequest.getId());
+
+		return new SuccessResult("BusinessMessages.PAYMENTDELETED");
+	}
+	
+	private Payment checkIfPaymentExists(int id) {
+
+		Payment payment = this.paymentDao.getByPaymentId(id);
+
+		if (payment == null) {
+			throw new BusinessException("BusinessMessages.PAYMENTNOTFOUND");
+		}
+		return payment;
+	}
+	
+	private void checkIfInvoiceExists(int invoiceId) {
+		
+	    if(this.invoiceService.getById(invoiceId)==null) {
+	    	throw new BusinessException("BusinessMessages.INVOICENOTFOUND");
+	    }
+	}
+	
+	private void checkIfOrderedAdditionalServiceExists(int orderedAdditionalServiceId) {
+		
+	    if(this.orderedAdditionalServiceService.getById(orderedAdditionalServiceId)==null) {
+	    	throw new BusinessException("BusinessMessages.ORDEREDADDITIONALSERVICENOTFOUND");
+	    }
+	}
+	
+	private void checkPaymentIfInvoiceExists(int invoiceId) {
+		
+		if(this.paymentDao.getByInvoice_invoiceId(invoiceId)!=null) {
+			throw new BusinessException("BusinessMessages.INVOICEANPAYMENTED");
+		}
+	}
+	
 }

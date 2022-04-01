@@ -13,5 +13,5 @@ public class ListIndividualCustomerDto {
 	private String password;
 	private String firstName;
 	private String lastName;
-	private int identityNumber;
+	private String identityNumber;
 }

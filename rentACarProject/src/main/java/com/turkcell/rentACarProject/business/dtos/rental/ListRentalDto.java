@@ -13,7 +13,7 @@ public class ListRentalDto {
     private int id;
     private LocalDate rentDate;
     private LocalDate returnDate;
-    private double additionalPrice;    
+    private double totalPrice;    
     private int customerId;
     private int carId;
     private int initialMileage;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkcell.rentACarProject.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentACarProject.business.dtos.carMaintenance.ListCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.CreateCarMaintenanceRequest;
+import com.turkcell.rentACarProject.business.requests.carMaintenance.DeleteCarMaintenanceRequest;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.UpdateCarMaintenanceRequest;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
@@ -31,6 +32,21 @@ public class CarMaintenanceController {
 		this.carMaintenanceService = carMaintenanceService;
 	}
 	
+	@GetMapping("/getAll")
+	public DataResult<List<ListCarMaintenanceDto>> getAll() {
+		return this.carMaintenanceService.getAll();
+	}
+	
+	@GetMapping("/getById")
+	DataResult<ListCarMaintenanceDto> getById(@RequestParam int id) {
+		return this.carMaintenanceService.getById(id);
+	}
+	
+	@GetMapping("/getAllByCarId")
+	public DataResult<List<ListCarMaintenanceDto>> getByCarId(@RequestParam int carId) {
+		return this.carMaintenanceService.getByCarId(carId);
+	}
+	
 	@PostMapping("/create")
 	public Result add(@RequestBody CreateCarMaintenanceRequest createCarMaintenanceRequest) {
 		return this.carMaintenanceService.create(createCarMaintenanceRequest);
@@ -40,19 +56,9 @@ public class CarMaintenanceController {
 	public Result update(@RequestBody UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
 		return this.carMaintenanceService.update(updateCarMaintenanceRequest);
 	}
-
-	@GetMapping("/getAll")
-	public DataResult<List<ListCarMaintenanceDto>> getAll() {
-		return this.carMaintenanceService.getAll();
-	}
-	
-	@GetMapping("/getAllByCarId")
-	public DataResult<List<ListCarMaintenanceDto>> getAllByCarId(@RequestParam int id) {
-		return this.carMaintenanceService.getAllByCarId(id);
-	}
 	
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int id) {
-		return this.carMaintenanceService.delete(id);
+	public Result delete(@RequestBody DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
+		return this.carMaintenanceService.delete(deleteCarMaintenanceRequest);
 	}
 }

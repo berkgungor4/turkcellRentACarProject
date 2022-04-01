@@ -9,7 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateCityRequest {
 	
-	private int id;
 	private String name;
-
 }

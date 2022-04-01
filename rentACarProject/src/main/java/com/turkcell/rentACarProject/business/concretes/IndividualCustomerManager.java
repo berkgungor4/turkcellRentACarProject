@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.turkcell.rentACarProject.business.abstracts.IndividualCustomerService;
 import com.turkcell.rentACarProject.business.dtos.individualCustomer.ListIndividualCustomerDto;
 import com.turkcell.rentACarProject.business.requests.individualCustomer.CreateIndividualCustomerRequest;
+import com.turkcell.rentACarProject.business.requests.individualCustomer.DeleteIndividualCustomerRequest;
+import com.turkcell.rentACarProject.business.requests.individualCustomer.UpdateIndividualCustomerRequest;
+import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
@@ -62,6 +65,36 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 		this.individualCustomerDao.save(customer);
 		
 		return new SuccessResult("IndividualCustomer.Added");
+	}
+
+	@Override
+	public Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
+		
+		checkIfIndividualCustomerExists(updateIndividualCustomerRequest.getId());
+		
+		IndividualCustomer individualCustomer = this.modelMapperService.forRequest()
+			.map(updateIndividualCustomerRequest, IndividualCustomer.class);
+		this.individualCustomerDao.save(individualCustomer);
+		
+		return new SuccessResult("BusinessMessages.INDIVIDUALCUSTOMERUPDATED");
+	}
+
+	@Override
+	public Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) {
+		
+		checkIfIndividualCustomerExists(deleteIndividualCustomerRequest.getId());
+		
+		this.individualCustomerDao.deleteById(deleteIndividualCustomerRequest.getId());
+		
+		return new SuccessResult("BusinessMessages.INDIVIDUALCUSTOMERDELETED");
+	}
+	
+	private void checkIfIndividualCustomerExists(int id) {
+		
+		if(!this.individualCustomerDao.existsById(id)) {
+			
+			throw new BusinessException("Messages.INDIVIDUALCUSTOMERNOTFOUND");
+		}
 	}
 
 }

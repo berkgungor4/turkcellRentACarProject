@@ -16,7 +16,10 @@ public class ListInvoiceDto {
 	private int id;
 	private String invoiceNumber;
 	private LocalDate creationDate;
+	private LocalDate rentDate;
+	private LocalDate returnDate;
 	private int numberOfDaysRented;
+	private double rentTotalPrice;
 	private int rental;
 	private Customer customer;
 }

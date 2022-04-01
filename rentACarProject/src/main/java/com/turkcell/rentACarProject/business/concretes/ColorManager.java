@@ -43,21 +43,24 @@ public class ColorManager implements ColorService {
 	
 	@Override
 	public DataResult<ListColorDto> getById(int id) {
-		Color result = this.colorDao.getColorById(id);
+		Color result = this.colorDao.getByColorId(id);
 		ListColorDto response = this.modelMapperService.forDto().map(result, ListColorDto.class);
 		return new SuccessDataResult<ListColorDto>(response);
 	}
 	
 	@Override
-	public Result create(CreateColorRequest createColorRequest) throws BusinessException {
+	public Result create(CreateColorRequest createColorRequest) {
+		
+		checkIfColorNameExists(createColorRequest.getName());
+		
 		Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
-		checkIfColorExists(color);
 		this.colorDao.save(color);
 		return new SuccessResult("Color.Created");
 	}
 
 	@Override
 	public Result delete(DeleteColorRequest deleteColorRequest) {
+		
 		Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
 		this.colorDao.delete(color);
 		return new SuccessResult("Color.Deleted");
@@ -65,15 +68,31 @@ public class ColorManager implements ColorService {
 
 	@Override
 	public Result update(UpdateColorRequest updateColorRequest) {
+		
+		checkIfColorExists(updateColorRequest.getId());
+		
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
 		this.colorDao.save(color);
 		return new SuccessResult("Color.Updated");
 	}
 	
-	void checkIfColorExists(Color color) throws BusinessException {
-		if (this.colorDao.getColorByName(color.getName()).stream().count() != 0) {
-			throw new BusinessException("Color already exists.");
+	private Color checkIfColorExists(int id){
+		
+		Color color = this.colorDao.getByColorId(id);
+		
+		if (color != null) {
+			throw new BusinessException("BusinessMessages.COLORNOTFOUND");
 		}
+		return color;
+		
 	}
+		
+		private boolean checkIfColorNameExists(String name){
+			
+			if (this.colorDao.getByColorName(name) == null) {
+				return true;
+			}
+			throw new BusinessException("BusinessMessages.COLOREXISTS");
+		}
 	
 }

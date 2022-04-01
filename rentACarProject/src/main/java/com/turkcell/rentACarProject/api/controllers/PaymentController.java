@@ -5,14 +5,17 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.rentACarProject.business.abstracts.PaymentService;
 import com.turkcell.rentACarProject.business.dtos.payment.ListPaymentDto;
 import com.turkcell.rentACarProject.business.requests.payment.CreatePaymentRequest;
+import com.turkcell.rentACarProject.business.requests.payment.DeletePaymentRequest;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 
@@ -34,8 +37,19 @@ public class PaymentController {
 		return this.paymentService.getAll();
 	}
 	
-	@PostMapping("/fakeisbankadd")
-	Result fakeIsBankAdd(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
-		return this.paymentService.fakeIsBankAdd(createPaymentRequest);
+	@GetMapping("/getall")
+	DataResult<ListPaymentDto> getById(@RequestParam int id){
+		return this.paymentService.getById(id);
 	}
+	
+	@PostMapping("/create")
+	Result create(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
+		return this.paymentService.create(createPaymentRequest);
+	}
+	
+	@DeleteMapping("/delete")
+	Result delete(@RequestBody DeletePaymentRequest deletePaymentRequest){
+		return this.paymentService.delete(deletePaymentRequest);
+	}
+	
 }

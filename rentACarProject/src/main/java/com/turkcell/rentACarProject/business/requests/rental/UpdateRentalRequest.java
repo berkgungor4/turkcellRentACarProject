@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class UpdateRentalRequest {
+	
+	private int id;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate returnDate;   

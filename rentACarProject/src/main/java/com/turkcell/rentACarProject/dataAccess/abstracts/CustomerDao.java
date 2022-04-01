@@ -8,4 +8,5 @@ import com.turkcell.rentACarProject.entities.concretes.Customer;
 @Repository
 public interface CustomerDao extends JpaRepository<Customer, Integer> {
 
+	Customer getByCustomerId(int id);
 }

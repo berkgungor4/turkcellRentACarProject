@@ -8,4 +8,9 @@ import com.turkcell.rentACarProject.entities.concretes.CorporateCustomer;
 @Repository
 public interface CorporateCustomerDao extends JpaRepository<CorporateCustomer, Integer>{
 
+	CorporateCustomer getByCorporateCustomerId(int id);
+	
+	CorporateCustomer findByEmail(String email);
+	
+	CorporateCustomer findByTaxNumber(String taxNumber);
 }

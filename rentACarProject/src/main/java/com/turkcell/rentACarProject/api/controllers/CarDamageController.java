@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkcell.rentACarProject.business.abstracts.CarDamageService;
 import com.turkcell.rentACarProject.business.dtos.carDamage.ListCarDamageDto;
 import com.turkcell.rentACarProject.business.requests.carDamage.CreateCarDamageRequest;
+import com.turkcell.rentACarProject.business.requests.carDamage.DeleteCarDamageRequest;
 import com.turkcell.rentACarProject.business.requests.carDamage.UpdateCarDamageRequest;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
@@ -30,6 +31,21 @@ public class CarDamageController {
 		this.carDamageService = carDamageService;
 	}
 	
+	@GetMapping("/getAll")
+	public DataResult<List<ListCarDamageDto>> getAll() {
+		return this.carDamageService.getAll();
+	}
+	
+	@GetMapping("/getById")
+	DataResult<ListCarDamageDto> getById(@RequestParam int id) {
+		return this.carDamageService.getById(id);
+	}
+	
+	@GetMapping("/getAllByCarId")
+	public DataResult<List<ListCarDamageDto>> getAllByCarId(@RequestParam int id) {
+		return this.carDamageService.getByCarId(id);
+	}
+	
 	@PostMapping("/create")
 	public Result add(@RequestBody CreateCarDamageRequest createCarDamageRequest){
 		return this.carDamageService.create(createCarDamageRequest);
@@ -39,19 +55,10 @@ public class CarDamageController {
 	public Result update(@RequestBody UpdateCarDamageRequest updateCarDamageRequest) {
 		return this.carDamageService.update(updateCarDamageRequest);
 	}
-
-	@GetMapping("/getAll")
-	public DataResult<List<ListCarDamageDto>> getAll() {
-		return this.carDamageService.getAll();
-	}
-	
-	@GetMapping("/getAllByCarId")
-	public DataResult<List<ListCarDamageDto>> getAllByCarId(@RequestParam int id) {
-		return this.carDamageService.getAllByCarId(id);
-	}
 	
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int id) {
-		return this.carDamageService.delete(id);
+	public Result delete(@RequestBody DeleteCarDamageRequest deleteCarDamageRequest) {
+		return this.carDamageService.delete(deleteCarDamageRequest);
 	}
+	
 }

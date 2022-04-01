@@ -1,5 +1,7 @@
 package com.turkcell.rentACarProject.business.requests.payment;
 
+import com.turkcell.rentACarProject.business.requests.creditCard.CreateCreditCardRequest;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreatePaymentRequest {
 	
-	private String cardOwnerName;
-	private String cardNumber;
-	private int cardCvvNumber;
 	private int invoiceId;
 	private int orderedAdditionalServiceId;
+	private CreateCreditCardRequest createCreditCard;
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.turkcell.rentACarProject.business.abstracts.CityService;
 import com.turkcell.rentACarProject.business.dtos.city.ListCityDto;
 import com.turkcell.rentACarProject.business.requests.city.CreateCityRequest;
+import com.turkcell.rentACarProject.business.requests.city.DeleteCityRequest;
+import com.turkcell.rentACarProject.business.requests.city.UpdateCityRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
@@ -58,11 +60,25 @@ public class CityManager implements CityService{
 	@Override
 	public Result create(CreateCityRequest createCityRequest) throws BusinessException {
 		
-	City city = this.modelMapperService.forRequest().map(createCityRequest, City.class);
+		City city = this.modelMapperService.forRequest().map(createCityRequest, City.class);
 		
 		this.cityDao.save(city);
 		
 		return new SuccessResult("City.Added");
+	}
+
+	@Override
+	public Result update(UpdateCityRequest updateCityRequest) {
+		City city = this.modelMapperService.forRequest().map(updateCityRequest, City.class);
+		this.cityDao.save(city);
+		return new SuccessResult("City.Updated");
+	}
+
+	@Override
+	public Result delete(DeleteCityRequest deleteCityRequest) {
+		City city = this.modelMapperService.forRequest().map(deleteCityRequest, City.class);
+		this.cityDao.delete(city);
+		return new SuccessResult("City.Deleted");
 	}
 
 }

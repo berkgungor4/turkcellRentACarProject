@@ -17,7 +17,6 @@ import com.turkcell.rentACarProject.business.dtos.color.ListColorDto;
 import com.turkcell.rentACarProject.business.requests.color.CreateColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.DeleteColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.UpdateColorRequest;
-import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 
@@ -39,7 +38,7 @@ public class ColorController {
 	}
 	
 	@PostMapping("/create")
-	public Result add(@RequestBody CreateColorRequest createColorRequest) throws BusinessException{
+	public Result add(@RequestBody CreateColorRequest createColorRequest) {
 		return this.colorService.create(createColorRequest);
 	}
 	
@@ -54,7 +53,7 @@ public class ColorController {
 	}
 	
 	@GetMapping("/getById")
-	public DataResult<ListColorDto> getById(@RequestParam int id) throws BusinessException {
+	public DataResult<ListColorDto> getById(@RequestParam int id) {
 		return this.colorService.getById(id);
 	}
 }

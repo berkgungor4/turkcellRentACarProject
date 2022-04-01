@@ -17,7 +17,6 @@ import com.turkcell.rentACarProject.business.dtos.brand.ListBrandDto;
 import com.turkcell.rentACarProject.business.requests.brand.CreateBrandRequest;
 import com.turkcell.rentACarProject.business.requests.brand.DeleteBrandRequest;
 import com.turkcell.rentACarProject.business.requests.brand.UpdateBrandRequest;
-import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 
@@ -36,9 +35,14 @@ public class BrandController {
 	public DataResult<List<ListBrandDto>> getAll() {
 		return this.brandService.getAll();
 	}
+	
+	@GetMapping("/getById")
+	public DataResult<ListBrandDto> getById(@RequestParam int id) {
+		return this.brandService.getById(id);
+	}
 
 	@PostMapping("/create")
-	public Result add(@RequestBody CreateBrandRequest createBrandRequest) throws BusinessException {
+	public Result add(@RequestBody CreateBrandRequest createBrandRequest) {
 		return this.brandService.create(createBrandRequest);
 	}
 	
@@ -51,9 +55,5 @@ public class BrandController {
 	public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) {
 		return this.brandService.update(updateBrandRequest);
 	}
-
-	@GetMapping("/getById")
-	public DataResult<ListBrandDto> getById(@RequestParam int id) throws BusinessException {
-		return this.brandService.getById(id);
-	}
+	
 }

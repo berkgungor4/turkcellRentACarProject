@@ -34,6 +34,9 @@ public class Invoice {
 	@Column(name = "creation_date")
 	private LocalDate creationDate;
 	
+	@Column(name= "rent_date")
+	private LocalDate rentDate;
+	
 	@Column(name= "return_date")
 	private LocalDate returnDate;
 	

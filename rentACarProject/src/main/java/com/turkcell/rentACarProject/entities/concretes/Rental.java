@@ -36,8 +36,8 @@ public class Rental {
     @Column(name = "return_date")
     private LocalDate returnDate;
 
-    @Column(name = "additional_price")
-    private double additionalPrice = 0;
+    @Column(name = "total_price")
+    private double totalPrice;
     
     @ManyToOne
     @JoinColumn(name = "customer_id")

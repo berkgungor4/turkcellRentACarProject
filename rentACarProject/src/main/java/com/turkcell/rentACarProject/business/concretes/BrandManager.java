@@ -43,20 +43,19 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public DataResult<ListBrandDto> getById(int id) throws BusinessException {
-		Brand result = this.brandDao.getBrandById(id);
-		if(result==null) {
+	public DataResult<ListBrandDto> getById(int id) {
+		Brand result = this.brandDao.getByBrandId(id);
+		if (result == null) {
 			return new ErrorDataResult<ListBrandDto>();
 		}
 		ListBrandDto response = this.modelMapperService.forDto().map(result, ListBrandDto.class);
 		return new SuccessDataResult<ListBrandDto>(response);
 	}
-	
+
 	@Override
-	public Result create(CreateBrandRequest createBrandRequest) throws BusinessException {
-		
+	public Result create(CreateBrandRequest createBrandRequest) {
+
 		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
-		checkIfBrandExists(brand);
 		this.brandDao.save(brand);
 		return new SuccessResult("Brand.Created");
 	}
@@ -70,14 +69,22 @@ public class BrandManager implements BrandService {
 
 	@Override
 	public Result update(UpdateBrandRequest updateBrandRequest) {
+		
+		checkIfBrandExists(updateBrandRequest.getId());
+		
 		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		this.brandDao.save(brand);
 		return new SuccessResult("Brand.Updated");
 	}
 
-	void checkIfBrandExists(Brand brand) throws BusinessException {
-		if (this.brandDao.getBrandByName(brand.getName()).stream().count() != 0) {
-			throw new BusinessException("Brand already exists!");
+	private Brand checkIfBrandExists(int id){
+		
+		Brand brand = this.brandDao.getByBrandId(id) ;
+		
+		if (brand== null) {
+			throw new BusinessException("BusinessMessages.BRANDNOTFOUND");
 		}
+		return brand;
 	}
+
 }

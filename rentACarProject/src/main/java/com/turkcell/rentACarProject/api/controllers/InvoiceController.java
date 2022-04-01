@@ -1,14 +1,19 @@
 package com.turkcell.rentACarProject.api.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.rentACarProject.business.abstracts.InvoiceService;
@@ -35,8 +40,23 @@ public class InvoiceController {
 	return this.invoiceService.getAll();
 	}
 	
+	@GetMapping("/getById")
+	DataResult<ListInvoiceDto> getById(@RequestParam int id){
+		return this.invoiceService.getById(id);
+	}
+	
+	@GetMapping("/getByDateOfBetween")
+	DataResult<List<ListInvoiceDto>> getByDateOfBetween (@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate creationDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate returnDate){
+		return this.invoiceService.getByDateOfBetween(creationDate, returnDate);
+	}
+	
+	@GetMapping("/getInvoiceByCustomer")
+	DataResult<List<ListInvoiceDto>> getInvoiceByCustomer(@RequestParam int customerId) {
+		return this.invoiceService.getInvoiceByCustomer(customerId);
+	}
+	
 	@PostMapping("/create")
-	Result create(@RequestBody CreateInvoiceRequest createInvoiceRequest) {
+	Result create(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
 		return this.invoiceService.create(createInvoiceRequest);
 	}
 	

@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class DeleteRentalRequest {
+	
 	private int id;
 }

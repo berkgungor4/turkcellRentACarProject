@@ -8,4 +8,9 @@ import com.turkcell.rentACarProject.entities.concretes.IndividualCustomer;
 @Repository
 public interface IndividualCustomerDao extends JpaRepository<IndividualCustomer, Integer> {
 
+	IndividualCustomer getByIndividualCustomerId(int id);
+	
+	IndividualCustomer findByEmail(String email);
+	
+	IndividualCustomer findByIdentityNumber(String identityNmuber);
 }
