@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.ColorService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.color.ListColorDto;
 import com.turkcell.rentACarProject.business.requests.color.CreateColorRequest;
 import com.turkcell.rentACarProject.business.requests.color.DeleteColorRequest;
@@ -38,14 +39,14 @@ public class ColorManager implements ColorService {
 		List<ListColorDto> response = result.stream()
 				.map(color -> this.modelMapperService.forDto().map(color, ListColorDto.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<ListColorDto>> (response);
+		return new SuccessDataResult<List<ListColorDto>> (response, Messages.SUCCESS);
 	}
 	
 	@Override
 	public DataResult<ListColorDto> getById(int id) {
 		Color result = this.colorDao.getByColorId(id);
 		ListColorDto response = this.modelMapperService.forDto().map(result, ListColorDto.class);
-		return new SuccessDataResult<ListColorDto>(response);
+		return new SuccessDataResult<ListColorDto>(response, Messages.SUCCESS);
 	}
 	
 	@Override
@@ -55,7 +56,7 @@ public class ColorManager implements ColorService {
 		
 		Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
 		this.colorDao.save(color);
-		return new SuccessResult("Color.Created");
+		return new SuccessResult(Messages.COLOR_ADD);
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class ColorManager implements ColorService {
 		
 		Color color = this.modelMapperService.forRequest().map(deleteColorRequest, Color.class);
 		this.colorDao.delete(color);
-		return new SuccessResult("Color.Deleted");
+		return new SuccessResult(Messages.COLOR_DELETE);
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class ColorManager implements ColorService {
 		
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
 		this.colorDao.save(color);
-		return new SuccessResult("Color.Updated");
+		return new SuccessResult(Messages.COLOR_UPDATE);
 	}
 	
 	private Color checkIfColorExists(int id){
@@ -81,7 +82,7 @@ public class ColorManager implements ColorService {
 		Color color = this.colorDao.getByColorId(id);
 		
 		if (color != null) {
-			throw new BusinessException("BusinessMessages.COLORNOTFOUND");
+			throw new BusinessException(Messages.COLOR_NOT_FOUND);
 		}
 		return color;
 		
@@ -92,7 +93,7 @@ public class ColorManager implements ColorService {
 			if (this.colorDao.getByColorName(name) == null) {
 				return true;
 			}
-			throw new BusinessException("BusinessMessages.COLOREXISTS");
+			throw new BusinessException(Messages.COLOR_EXISTS);
 		}
 	
 }

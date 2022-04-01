@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.CustomerService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.customer.ListCustomerDto;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
@@ -34,7 +35,7 @@ public class CustomerManager implements CustomerService {
 		List<ListCustomerDto> response = result.stream()
 				.map(customer -> this.modelMapperService.forDto().map(customer, ListCustomerDto.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<ListCustomerDto>>(response);
+		return new SuccessDataResult<List<ListCustomerDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -42,10 +43,10 @@ public class CustomerManager implements CustomerService {
 		
 		Customer result = this.customerDao.getById(id);
 		if(result == null) {
-			throw new BusinessException("Car.NotFound");
+			throw new BusinessException(Messages.CUSTOMER_NOT_FOUND);
 		}
 		ListCustomerDto response = this.modelMapperService.forDto().map(result, ListCustomerDto.class);		
-		return new SuccessDataResult<ListCustomerDto>(response);
+		return new SuccessDataResult<ListCustomerDto>(response, Messages.SUCCESS);
 	}
 
 }

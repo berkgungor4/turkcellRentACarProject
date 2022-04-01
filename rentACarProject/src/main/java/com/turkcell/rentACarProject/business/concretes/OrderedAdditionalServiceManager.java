@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.turkcell.rentACarProject.business.abstracts.AdditionalServiceService;
 import com.turkcell.rentACarProject.business.abstracts.OrderedAdditionalServiceService;
 import com.turkcell.rentACarProject.business.abstracts.RentalService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.additionalService.ListAdditionalServiceDto;
 import com.turkcell.rentACarProject.business.dtos.orderedAdditionalService.ListOrderedAdditionalServiceDto;
 import com.turkcell.rentACarProject.business.dtos.rental.ListRentalDto;
@@ -54,7 +55,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 						ListOrderedAdditionalServiceDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListOrderedAdditionalServiceDto>>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<List<ListOrderedAdditionalServiceDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		ListOrderedAdditionalServiceDto response = this.modelMapperService.forDto().map(result,
 				ListOrderedAdditionalServiceDto.class);
 
-		return new SuccessDataResult<ListOrderedAdditionalServiceDto>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<ListOrderedAdditionalServiceDto>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -77,7 +78,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 						ListOrderedAdditionalServiceDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListOrderedAdditionalServiceDto>>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<List<ListOrderedAdditionalServiceDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
 		this.orderedAdditionalServiceDao.save(orderedAdditionalService);
 
-		return new SuccessResult("BusinessMessages.ORDEREDADDITIONALSERVICEADDED");
+		return new SuccessResult(Messages.ORDERED_ADDITIONAL_SERVICE_ADD);
 	}
 
 	@Override
@@ -109,7 +110,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
 		this.orderedAdditionalServiceDao.save(orderedadditionalService);
 
-		return new SuccessResult("BusinessMessages.ORDEREDADDITIONALSERVICEUPDATED");
+		return new SuccessResult(Messages.ORDERED_ADDITIONAL_SERVICE_UPDATE);
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
 		this.orderedAdditionalServiceDao.deleteById(deleteOrderedAdditionalService.getId());
 
-		return new SuccessResult("BusinessMessages.ORDEREDADDITIONALSERVICEDELETED");
+		return new SuccessResult(Messages.ORDERED_ADDITIONAL_SERVICE_DELETE);
 	}
 
 	private Rental checkIfRentalExists(int id) {
@@ -127,7 +128,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		ListRentalDto listRentalDto = this.rentalService.getById(id).getData();
 
 		if (listRentalDto == null) {
-			throw new BusinessException("BusinessMessages.RENTALCARNOTFOUND");
+			throw new BusinessException(Messages.RENTAL_NOT_FOUND);
 		}
 		Rental rental = this.modelMapperService.forDto().map(listRentalDto, Rental.class);
 		return rental;
@@ -138,7 +139,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		ListAdditionalServiceDto listAdditionalServiceDto = this.additionalServiceService.getById(id).getData();
 
 		if (listAdditionalServiceDto == null) {
-			throw new BusinessException("BusinessMessages.ADDITIONALSERVICENOTFOUND");
+			throw new BusinessException(Messages.ADDITIONAL_SERVICE_NOT_FOUND);
 		}
 		AdditionalService additionalService = this.modelMapperService.forDto().map(listAdditionalServiceDto,
 				AdditionalService.class);
@@ -151,7 +152,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 				.getByOrderedAdditionalServiceId(id);
 
 		if (orderedAdditionalService == null) {
-			throw new BusinessException("BusinessMessages.ORDEREDADDITIONALSERVICENOTFOUND");
+			throw new BusinessException(Messages.ORDERED_ADDITIONAL_SERVICE_NOT_FOUND);
 		}
 		return orderedAdditionalService;
 	}

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.CreditCardService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.requests.creditCard.CreateCreditCardRequest;
 import com.turkcell.rentACarProject.business.requests.creditCard.DeleteCreditCardRequest;
 import com.turkcell.rentACarProject.business.requests.creditCard.UpdateCreditCardRequest;
@@ -34,7 +35,7 @@ public class CreditCardManager implements CreditCardService {
 		
 		this.creditCardDao.save(creditCard);
 		
-		return new SuccessResult("BusinessMessages.CREDİTCARDADDED");
+		return new SuccessResult(Messages.CREDİT_CARD_ADD);
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class CreditCardManager implements CreditCardService {
 		
 		CreditCard creditCard = this.modelMapperService.forRequest().map(updateCreditCardRequest, CreditCard.class);
 		this.creditCardDao.save(creditCard);
-		return new SuccessResult("CreditCard.Updated");
+		return new SuccessResult(Messages.CREDİT_CARD_UPDATE);
 	}
 
 	@Override
@@ -50,6 +51,6 @@ public class CreditCardManager implements CreditCardService {
 		
 		CreditCard creditCard = this.modelMapperService.forRequest().map(deleteCreditCardRequest, CreditCard.class);
 		this.creditCardDao.delete(creditCard);
-		return new SuccessResult("CreditCard.Deleted");
+		return new SuccessResult(Messages.CREDİT_CARD_DELETE);
 	}
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentACarProject.business.abstracts.RentalService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.carMaintenance.ListCarMaintenanceDto;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.CreateCarMaintenanceRequest;
 import com.turkcell.rentACarProject.business.requests.carMaintenance.DeleteCarMaintenanceRequest;
@@ -45,7 +46,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 				carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, ListCarMaintenanceDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListCarMaintenanceDto>>(response);
+		return new SuccessDataResult<List<ListCarMaintenanceDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -53,10 +54,10 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 		CarMaintenance result = this.carMaintenanceDao.getById(id);
 		if (result == null) {
-			return new ErrorDataResult<ListCarMaintenanceDto>();
+			return new ErrorDataResult<ListCarMaintenanceDto>(Messages.CAR_MAINTENANCE_NOT_FOUND);
 		}
 		ListCarMaintenanceDto response = this.modelMapperService.forDto().map(result, ListCarMaintenanceDto.class);
-		return new SuccessDataResult<ListCarMaintenanceDto>(response);
+		return new SuccessDataResult<ListCarMaintenanceDto>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 				.map(carMaintenance -> modelMapperService.forDto().map(carMaintenance, ListCarMaintenanceDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListCarMaintenanceDto>>(response);
+		return new SuccessDataResult<List<ListCarMaintenanceDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -79,8 +80,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 				CarMaintenance.class);
 		this.carMaintenanceDao.save(carMaintenance);
 
-		return new SuccessResult(
-				"Created maintenance information of " + createCarMaintenanceRequest.getDescription() + " car.");
+		return new SuccessResult(Messages.CAR_MAINTENANCE_ADD);
 	}
 
 	@Override
@@ -89,8 +89,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(updateCarMaintenanceRequest,
 				CarMaintenance.class);
 		this.carMaintenanceDao.save(carMaintenance);
-		return new SuccessResult(
-				"Updated maintenance information of " + updateCarMaintenanceRequest.getDescription() + " car.");
+		return new SuccessResult(Messages.CAR_MAINTENANCE_UPDATE);
 	}
 
 	@Override
@@ -99,17 +98,17 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(deleteCarMaintenanceRequest,
 				CarMaintenance.class);
 		this.carMaintenanceDao.delete(carMaintenance);
-		return new SuccessResult("");
+		return new SuccessResult(Messages.CAR_MAINTENANCE_DELETE);
 	}
 
 	@Override
-	public Result isCarInMaintenance(int carId) throws BusinessException {
+	public Result isCarInMaintenance(int carId) {
 
 		if (this.carMaintenanceDao.getByCarMaintenanceId(carId) != null)
-			throw new BusinessException("Rental can't be added (Car is under maintenance at requested times");
+			throw new BusinessException(Messages.CAR_MAINTENANCE_CAR_IN_RENT );
 
 		else
-			return new SuccessResult();
+			return new SuccessResult(Messages.SUCCESS);
 	}
 
 }

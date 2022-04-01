@@ -10,6 +10,7 @@ import com.turkcell.rentACarProject.business.abstracts.InvoiceService;
 import com.turkcell.rentACarProject.business.abstracts.OrderedAdditionalServiceService;
 import com.turkcell.rentACarProject.business.abstracts.PaymentService;
 import com.turkcell.rentACarProject.business.abstracts.PosService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.payment.ListPaymentDto;
 import com.turkcell.rentACarProject.business.requests.payment.CreatePaymentRequest;
 import com.turkcell.rentACarProject.business.requests.payment.DeletePaymentRequest;
@@ -49,7 +50,7 @@ public class PaymentManager implements PaymentService {
 				.map(payment -> this.modelMapperService.forDto().map(payment, ListPaymentDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListPaymentDto>>(response);
+		return new SuccessDataResult<List<ListPaymentDto>>(response, Messages.SUCCESS);
 	}
 	
 	@Override
@@ -59,7 +60,7 @@ public class PaymentManager implements PaymentService {
 
 		ListPaymentDto response = this.modelMapperService.forDto().map(result, ListPaymentDto.class);
 
-		return new SuccessDataResult<ListPaymentDto>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<ListPaymentDto>(response, Messages.SUCCESS);
 		
 	}
 	
@@ -67,8 +68,6 @@ public class PaymentManager implements PaymentService {
 	public Result create(CreatePaymentRequest createPaymentRequest) {
 		
 		checkIfInvoiceExists(createPaymentRequest.getInvoiceId());
-		
-		checkPaymentIfInvoiceExists(createPaymentRequest.getInvoiceId());
 		
 		checkIfOrderedAdditionalServiceExists(createPaymentRequest.getOrderedAdditionalServiceId());
 		
@@ -80,7 +79,7 @@ public class PaymentManager implements PaymentService {
 
 		this.paymentDao.save(payment);
 
-		return new SuccessResult("BusinessMessages.PAYMENTADDED");
+		return new SuccessResult(Messages.PAYMENT_ADD);
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public class PaymentManager implements PaymentService {
 
 		this.paymentDao.deleteById(deletePaymentRequest.getId());
 
-		return new SuccessResult("BusinessMessages.PAYMENTDELETED");
+		return new SuccessResult(Messages.PAYMENT_DELETE);
 	}
 	
 	private Payment checkIfPaymentExists(int id) {
@@ -98,7 +97,7 @@ public class PaymentManager implements PaymentService {
 		Payment payment = this.paymentDao.getByPaymentId(id);
 
 		if (payment == null) {
-			throw new BusinessException("BusinessMessages.PAYMENTNOTFOUND");
+			throw new BusinessException(Messages.PAYMENT_ADD);
 		}
 		return payment;
 	}
@@ -106,22 +105,15 @@ public class PaymentManager implements PaymentService {
 	private void checkIfInvoiceExists(int invoiceId) {
 		
 	    if(this.invoiceService.getById(invoiceId)==null) {
-	    	throw new BusinessException("BusinessMessages.INVOICENOTFOUND");
+	    	throw new BusinessException(Messages.INVOICE_NOT_FOUND);
 	    }
 	}
 	
 	private void checkIfOrderedAdditionalServiceExists(int orderedAdditionalServiceId) {
 		
 	    if(this.orderedAdditionalServiceService.getById(orderedAdditionalServiceId)==null) {
-	    	throw new BusinessException("BusinessMessages.ORDEREDADDITIONALSERVICENOTFOUND");
+	    	throw new BusinessException(Messages.ORDERED_ADDITIONAL_SERVICE_NOT_FOUND);
 	    }
-	}
-	
-	private void checkPaymentIfInvoiceExists(int invoiceId) {
-		
-		if(this.paymentDao.getByInvoice_invoiceId(invoiceId)!=null) {
-			throw new BusinessException("BusinessMessages.INVOICEANPAYMENTED");
-		}
 	}
 	
 }

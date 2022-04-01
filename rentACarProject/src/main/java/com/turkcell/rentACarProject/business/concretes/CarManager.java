@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.CarService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.car.ListCarDto;
 import com.turkcell.rentACarProject.business.requests.car.CreateCarRequest;
 import com.turkcell.rentACarProject.business.requests.car.DeleteCarRequest;
@@ -41,21 +42,21 @@ public class CarManager implements CarService {
 		List<ListCarDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, ListCarDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListCarDto>>(response);
+		return new SuccessDataResult<List<ListCarDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public Result create(CreateCarRequest createCarRequest) {
 		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
 		this.carDao.save(car);
-		return new SuccessResult("Car.Added");
+		return new SuccessResult(Messages.CAR_ADD);
 	}
 
 	@Override
 	public Result delete(DeleteCarRequest deleteCarRequest) {
 		Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
 		this.carDao.delete(car);
-		return new SuccessResult("Car.Deleted");
+		return new SuccessResult(Messages.CAR_DELETE);
 
 	}
 
@@ -63,7 +64,7 @@ public class CarManager implements CarService {
 	public Result update(UpdateCarRequest updateCarRequest) {
 		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
 		this.carDao.save(car);
-		return new SuccessResult("Car.Updated");
+		return new SuccessResult(Messages.CAR_UPDATE);
 
 	}
 
@@ -74,12 +75,12 @@ public class CarManager implements CarService {
 
 		if (result == null) {
 
-			return new ErrorDataResult<ListCarDto>("Car.NotFound");
+			return new ErrorDataResult<ListCarDto>(Messages.CAR_NOT_FOUND);
 		}
 
 		ListCarDto response = this.modelMapperService.forDto().map(result, ListCarDto.class);
 
-		return new SuccessDataResult<ListCarDto>(response);
+		return new SuccessDataResult<ListCarDto>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class CarManager implements CarService {
 		List<ListCarDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, ListCarDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListCarDto>>(response);
+		return new SuccessDataResult<List<ListCarDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public class CarManager implements CarService {
 		List<ListCarDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, ListCarDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListCarDto>>(response);
+		return new SuccessDataResult<List<ListCarDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class CarManager implements CarService {
 		List<ListCarDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, ListCarDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<>(response);
+		return new SuccessDataResult<>(response, Messages.SUCCESS);
 	}
 
 }

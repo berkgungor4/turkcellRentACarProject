@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.AdditionalServiceService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.additionalService.ListAdditionalServiceDto;
 import com.turkcell.rentACarProject.business.requests.additionalService.CreateAdditionalServiceRequest;
 import com.turkcell.rentACarProject.business.requests.additionalService.DeleteAdditionalServiceRequest;
@@ -41,7 +42,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		List<ListAdditionalServiceDto> response = result.stream().map(additionalService -> this.modelMapperService
 				.forDto().map(additionalService, ListAdditionalServiceDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ListAdditionalServiceDto>>(response, "Success");
+		return new SuccessDataResult<List<ListAdditionalServiceDto>>(response, Messages.SUCCESS);
 	}
 	
 	@Override
@@ -53,9 +54,9 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 			ListAdditionalServiceDto response = this.modelMapperService.forDto().map(result,
 					ListAdditionalServiceDto.class);
 
-			return new SuccessDataResult<ListAdditionalServiceDto>(response, "");
+			return new SuccessDataResult<ListAdditionalServiceDto>(response, Messages.SUCCESS);
 		}
-		return new ErrorDataResult<ListAdditionalServiceDto>("");
+		return new ErrorDataResult<ListAdditionalServiceDto>(Messages.ADDITIONAL_SERVICE_NOT_FOUND);
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 				AdditionalService.class);
 		this.additionalServiceDao.save(additionalService);
 
-		return new SuccessResult("");
+		return new SuccessResult(Messages.ADDITIONAL_SERVICE_ADD);
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 		this.additionalServiceDao.save(additionalService);
 
-		return new SuccessResult("");
+		return new SuccessResult(Messages.ADDITIONAL_SERVICE_UPDATE);
 	}
 
 	@Override
@@ -88,14 +89,14 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 		this.additionalServiceDao.deleteById(deleteAdditionalServiceRequest.getId());
 
-		return new SuccessResult("");
+		return new SuccessResult(Messages.ADDITIONAL_SERVICE_DELETE);
 	}
 
 	private void checkIfAdditionalServiceExists(int id) {
 
 		if (!this.additionalServiceDao.existsById(id)) {
 			
-			throw new BusinessException("Messages.ADDITIONALSERVICENOTFOUND");
+			throw new BusinessException(Messages.ADDITIONAL_SERVICE_ADD);
 		}
 	}
 

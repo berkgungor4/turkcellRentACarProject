@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.BrandService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.brand.ListBrandDto;
 import com.turkcell.rentACarProject.business.requests.brand.CreateBrandRequest;
 import com.turkcell.rentACarProject.business.requests.brand.DeleteBrandRequest;
@@ -39,17 +40,17 @@ public class BrandManager implements BrandService {
 		List<ListBrandDto> response = result.stream()
 				.map(brand -> this.modelMapperService.forDto().map(brand, ListBrandDto.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<ListBrandDto>>(response);
+		return new SuccessDataResult<List<ListBrandDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public DataResult<ListBrandDto> getById(int id) {
 		Brand result = this.brandDao.getByBrandId(id);
 		if (result == null) {
-			return new ErrorDataResult<ListBrandDto>();
+			return new ErrorDataResult<ListBrandDto>(Messages.BRAND_NOT_FOUND);
 		}
 		ListBrandDto response = this.modelMapperService.forDto().map(result, ListBrandDto.class);
-		return new SuccessDataResult<ListBrandDto>(response);
+		return new SuccessDataResult<ListBrandDto>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -57,14 +58,14 @@ public class BrandManager implements BrandService {
 
 		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
 		this.brandDao.save(brand);
-		return new SuccessResult("Brand.Created");
+		return new SuccessResult(Messages.BRAND_ADD);
 	}
 
 	@Override
 	public Result delete(DeleteBrandRequest deleteBrandRequest) {
 		Brand brand = this.modelMapperService.forRequest().map(deleteBrandRequest, Brand.class);
 		this.brandDao.delete(brand);
-		return new SuccessResult("Brand.Deleted");
+		return new SuccessResult(Messages.BRAND_DELETED);
 	}
 
 	@Override
@@ -74,7 +75,7 @@ public class BrandManager implements BrandService {
 		
 		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		this.brandDao.save(brand);
-		return new SuccessResult("Brand.Updated");
+		return new SuccessResult(Messages.BRAND_UPDATE);
 	}
 
 	private Brand checkIfBrandExists(int id){
@@ -82,7 +83,7 @@ public class BrandManager implements BrandService {
 		Brand brand = this.brandDao.getByBrandId(id) ;
 		
 		if (brand== null) {
-			throw new BusinessException("BusinessMessages.BRANDNOTFOUND");
+			throw new BusinessException(Messages.BRAND_NOT_FOUND);
 		}
 		return brand;
 	}

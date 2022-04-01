@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.CityService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.city.ListCityDto;
 import com.turkcell.rentACarProject.business.requests.city.CreateCityRequest;
 import com.turkcell.rentACarProject.business.requests.city.DeleteCityRequest;
 import com.turkcell.rentACarProject.business.requests.city.UpdateCityRequest;
-import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
@@ -41,7 +41,7 @@ public class CityManager implements CityService{
 				.map(city -> this.modelMapperService.forDto().map(city, ListCityDto.class))
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<ListCityDto>>(response);
+		return new SuccessDataResult<List<ListCityDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -50,35 +50,35 @@ public class CityManager implements CityService{
 		City result = this.cityDao.getById(id);
 		
 		if(result == null) {
-			return new ErrorDataResult<ListCityDto>("City.NotFound");
+			return new ErrorDataResult<ListCityDto>(Messages.CITY_NOT_FOUND);
 		}
 		ListCityDto response = this.modelMapperService.forDto().map(result, ListCityDto.class);		
 		
-		return new SuccessDataResult<ListCityDto>(response);
+		return new SuccessDataResult<ListCityDto>(response, Messages.SUCCESS);
 	}
 
 	@Override
-	public Result create(CreateCityRequest createCityRequest) throws BusinessException {
+	public Result create(CreateCityRequest createCityRequest) {
 		
 		City city = this.modelMapperService.forRequest().map(createCityRequest, City.class);
 		
 		this.cityDao.save(city);
 		
-		return new SuccessResult("City.Added");
+		return new SuccessResult(Messages.CITY_ADD);
 	}
 
 	@Override
 	public Result update(UpdateCityRequest updateCityRequest) {
 		City city = this.modelMapperService.forRequest().map(updateCityRequest, City.class);
 		this.cityDao.save(city);
-		return new SuccessResult("City.Updated");
+		return new SuccessResult(Messages.CITY_UPDATE);
 	}
 
 	@Override
 	public Result delete(DeleteCityRequest deleteCityRequest) {
 		City city = this.modelMapperService.forRequest().map(deleteCityRequest, City.class);
 		this.cityDao.delete(city);
-		return new SuccessResult("City.Deleted");
+		return new SuccessResult(Messages.CITY_DELETE);
 	}
 
 }

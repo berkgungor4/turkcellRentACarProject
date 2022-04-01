@@ -13,6 +13,7 @@ import com.turkcell.rentACarProject.business.abstracts.CustomerService;
 import com.turkcell.rentACarProject.business.abstracts.InvoiceService;
 import com.turkcell.rentACarProject.business.abstracts.OrderedAdditionalServiceService;
 import com.turkcell.rentACarProject.business.abstracts.RentalService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.additionalService.ListAdditionalServiceDto;
 import com.turkcell.rentACarProject.business.dtos.invoice.ListInvoiceDto;
 import com.turkcell.rentACarProject.business.dtos.orderedAdditionalService.ListOrderedAdditionalServiceDto;
@@ -51,7 +52,7 @@ public class InvoiceManager implements InvoiceService{
 		List<ListInvoiceDto> response = result.stream()
 				.map(brand -> this.modelMapperService.forDto().map(brand, ListInvoiceDto.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<ListInvoiceDto>>(response);
+		return new SuccessDataResult<List<ListInvoiceDto>>(response, Messages.SUCCESS);
 	}
 	
 	@Override
@@ -61,7 +62,7 @@ public class InvoiceManager implements InvoiceService{
 		
 		ListInvoiceDto response = this.modelMapperService.forDto().map(result, ListInvoiceDto.class);
 		
-		return new SuccessDataResult<ListInvoiceDto>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<ListInvoiceDto>(response, Messages.SUCCESS);
 	}
 	
 	@Override
@@ -72,7 +73,7 @@ public class InvoiceManager implements InvoiceService{
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, ListInvoiceDto.class))
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<ListInvoiceDto>>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<List<ListInvoiceDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class InvoiceManager implements InvoiceService{
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, ListInvoiceDto.class))
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<ListInvoiceDto>>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<List<ListInvoiceDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class InvoiceManager implements InvoiceService{
 		
 		this.invoiceDao.save(invoice);
 
-		return new SuccessResult("BusinessMessages.INVOICEADDED");
+		return new SuccessResult(Messages.INVOICE_ADD);
 	}
 
 	@Override
@@ -106,7 +107,7 @@ public class InvoiceManager implements InvoiceService{
 		checkIfInvoiceExists(deleteInvoiceRequest.getId());
 		Invoice invoice = this.modelMapperService.forRequest().map(deleteInvoiceRequest, Invoice.class);
 		this.invoiceDao.delete(invoice);
-		return new SuccessResult("Invoice.Deleted");
+		return new SuccessResult(Messages.INVOICE_DELETE);
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public class InvoiceManager implements InvoiceService{
 		invoice.setCreationDate(updateInvoiceRequest.getCreationDate());
 		this.invoiceDao.save(invoice);
 
-		return new SuccessResult("BusinessMessages.INVOICEUPDATED");
+		return new SuccessResult(Messages.INVOICE_UPDATE);
 	}
 	
 	private Invoice checkIfInvoiceExists(int id) {
@@ -126,7 +127,7 @@ public class InvoiceManager implements InvoiceService{
 		Invoice invoice =this.invoiceDao.getByInvoiceId(id);
 		
 		if(invoice==null) {
-			throw new BusinessException("BusinessMessages.INVOICENOTFOUND");
+			throw new BusinessException(Messages.INVOICE_NOT_FOUND);
 		}
 		
 		return invoice;

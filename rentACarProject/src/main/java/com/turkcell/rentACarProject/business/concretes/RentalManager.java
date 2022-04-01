@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.turkcell.rentACarProject.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentACarProject.business.abstracts.CarService;
 import com.turkcell.rentACarProject.business.abstracts.RentalService;
+import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.car.ListCarDto;
 import com.turkcell.rentACarProject.business.dtos.rental.ListRentalDto;
 import com.turkcell.rentACarProject.business.requests.rental.CreateRentalRequest;
@@ -51,7 +52,7 @@ public class RentalManager implements RentalService {
 				.map(rental -> this.modelMapperService.forDto().map(rental, ListRentalDto.class))
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<ListRentalDto>>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<List<ListRentalDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class RentalManager implements RentalService {
 		
 		response.setTotalPrice(result.getTotalPrice());
 
-		return new SuccessDataResult<ListRentalDto>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<ListRentalDto>(response, Messages.SUCCESS);
 	}
 	
 	@Override
@@ -74,7 +75,7 @@ public class RentalManager implements RentalService {
 			.map(rental -> this.modelMapperService.forDto().map(rental, ListRentalDto.class))
 			.collect(Collectors.toList());
 			
-		return new SuccessDataResult<List<ListRentalDto>>(response, "BusinessMessages.SUCCESS");
+		return new SuccessDataResult<List<ListRentalDto>>(response, Messages.SUCCESS);
 	}
 	
 	@Override
@@ -92,7 +93,7 @@ public class RentalManager implements RentalService {
 		
 	    this.rentalDao.save(rental);
 	    
-	    return new SuccessResult("The rental information of the vehicle with id" +createRentalRequest.getCarId()+ "has been added from the database.");
+	    return new SuccessResult(Messages.RENTAL_ADD);
 	}
 
 	@Override
@@ -102,7 +103,7 @@ public class RentalManager implements RentalService {
 		
 		Rental rental = this.modelMapperService.forRequest().map(deleteRentalRequest, Rental.class);
 		this.rentalDao.delete(rental);
-		return new SuccessResult("The rental information of the vehicle with id "+deleteRentalRequest.getId()+" has been deleted from the database.");
+		return new SuccessResult(Messages.RENTAL_DELETE);
 	}
 
 	@Override
@@ -118,24 +119,24 @@ public class RentalManager implements RentalService {
 		rental.setReturnMileage(updateRentalRequest.getReturnMileage());
 		
 		this.rentalDao.save(rental);
-		return new SuccessResult("The rental updated from the database.");
+		return new SuccessResult(Messages.RENTAL_UPDATE);
 	}
 	
 	@Override
-	public Result isCarRented(int carId) throws BusinessException {
+	public Result isCarRented(int carId) {
 		
 		if(this.rentalDao.getByRentalId(carId) != null) {
-			throw new BusinessException("Maintenance  can't be added (Car is Rented at requested times)");
+			throw new BusinessException(Messages.RENTAL_IN_MAINTENANCE);
 		}
 		else
-			return new SuccessResult();
+			return new SuccessResult(Messages.SUCCESS);
 	}
 	
 	private Rental checkIfRentalExists(int id){
 		
 		Rental rental = this.rentalDao.getById(id);
 		if (rental == null) {
-			throw new BusinessException("BusinessMessages.RENTALCARNOTFOUND");
+			throw new BusinessException(Messages.RENTAL_NOT_FOUND);
 		}
 		return rental;
 	}
