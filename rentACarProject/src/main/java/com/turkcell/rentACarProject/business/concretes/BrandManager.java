@@ -15,7 +15,6 @@ import com.turkcell.rentACarProject.business.requests.brand.UpdateBrandRequest;
 import com.turkcell.rentACarProject.core.exceptions.BusinessException;
 import com.turkcell.rentACarProject.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
-import com.turkcell.rentACarProject.core.utilities.results.ErrorDataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 import com.turkcell.rentACarProject.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentACarProject.core.utilities.results.SuccessResult;
@@ -45,10 +44,7 @@ public class BrandManager implements BrandService {
 
 	@Override
 	public DataResult<ListBrandDto> getById(int id) {
-		Brand result = this.brandDao.getByBrandId(id);
-		if (result == null) {
-			return new ErrorDataResult<ListBrandDto>(Messages.BRAND_NOT_FOUND);
-		}
+		Brand result = this.brandDao.getBrandById(id);
 		ListBrandDto response = this.modelMapperService.forDto().map(result, ListBrandDto.class);
 		return new SuccessDataResult<ListBrandDto>(response, Messages.SUCCESS);
 	}
@@ -80,7 +76,7 @@ public class BrandManager implements BrandService {
 
 	private Brand checkIfBrandExists(int id){
 		
-		Brand brand = this.brandDao.getByBrandId(id) ;
+		Brand brand = this.brandDao.getBrandById(id) ;
 		
 		if (brand== null) {
 			throw new BusinessException(Messages.BRAND_NOT_FOUND);

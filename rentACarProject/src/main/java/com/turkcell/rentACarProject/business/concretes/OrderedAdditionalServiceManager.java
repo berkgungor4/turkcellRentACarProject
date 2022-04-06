@@ -72,7 +72,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	@Override
 	public DataResult<List<ListOrderedAdditionalServiceDto>> findAllByRentalId(int rentalId) {
 
-		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.getByRental_rentalId(rentalId);
+		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.getByRental_id(rentalId);
 		List<ListOrderedAdditionalServiceDto> response = result.stream()
 				.map(orderedAdditionalService -> this.modelMapperService.forDto().map(orderedAdditionalService,
 						ListOrderedAdditionalServiceDto.class))
@@ -106,7 +106,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		checkIfAdditionalServiceExists(updateOrderedAdditionalServiceRequest.getAdditionalServiceId());
 
 		OrderedAdditionalService orderedadditionalService = this.orderedAdditionalServiceDao
-				.getByOrderedAdditionalServiceId(updateOrderedAdditionalServiceRequest.getId());
+				.getOrderedAdditionalServiceById(updateOrderedAdditionalServiceRequest.getId());
 
 		this.orderedAdditionalServiceDao.save(orderedadditionalService);
 
@@ -149,7 +149,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	private OrderedAdditionalService checkIfOrderedAdditionalServiceExists(int id) {
 
 		OrderedAdditionalService orderedAdditionalService = this.orderedAdditionalServiceDao
-				.getByOrderedAdditionalServiceId(id);
+				.getOrderedAdditionalServiceById(id);
 
 		if (orderedAdditionalService == null) {
 			throw new BusinessException(Messages.ORDERED_ADDITIONAL_SERVICE_NOT_FOUND);

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 import com.turkcell.rentACarProject.entities.concretes.Color;
 
 @Repository
-public interface ColorDao extends JpaRepository<Color, Integer>{
+public interface ColorDao extends JpaRepository<Color, Integer> {
 	
-	Color getByColorId(int id);
+	Color getColorById(int id);
 	
-	Color getByColorName(String name);
+	Color getColorByName(String name);
 }

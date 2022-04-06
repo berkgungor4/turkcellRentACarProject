@@ -22,6 +22,7 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/brands")
+
 public class BrandController {
 
 	private BrandService brandService;

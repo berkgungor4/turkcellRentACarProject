@@ -70,7 +70,7 @@ public class RentalManager implements RentalService {
 	@Override
 	public DataResult<List<ListRentalDto>> getByCarId(int carId) {
 		
-		List<Rental> result = this.rentalDao.getByCar_CarId(carId);
+		List<Rental> result = this.rentalDao.getByCar_id(carId);
 		List<ListRentalDto> response = result.stream()
 			.map(rental -> this.modelMapperService.forDto().map(rental, ListRentalDto.class))
 			.collect(Collectors.toList());
@@ -111,7 +111,7 @@ public class RentalManager implements RentalService {
 		
 		checkIfRentalExists(updateRentalRequest.getId());
 		
-		Rental rental = this.rentalDao.getByRentalId(updateRentalRequest.getId());
+		Rental rental = this.rentalDao.getRentalById(updateRentalRequest.getId());
 		rental.setTotalPrice(updateTotalPrice(rental, updateRentalRequest)); 
 		rental.getCar().setMileage(updateRentalRequest.getReturnMileage());
 		
@@ -125,7 +125,7 @@ public class RentalManager implements RentalService {
 	@Override
 	public Result isCarRented(int carId) {
 		
-		if(this.rentalDao.getByRentalId(carId) != null) {
+		if(this.rentalDao.getRentalById(carId) != null) {
 			throw new BusinessException(Messages.RENTAL_IN_MAINTENANCE);
 		}
 		else

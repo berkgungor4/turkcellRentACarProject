@@ -44,7 +44,7 @@ public class ColorManager implements ColorService {
 	
 	@Override
 	public DataResult<ListColorDto> getById(int id) {
-		Color result = this.colorDao.getByColorId(id);
+		Color result = this.colorDao.getColorById(id);
 		ListColorDto response = this.modelMapperService.forDto().map(result, ListColorDto.class);
 		return new SuccessDataResult<ListColorDto>(response, Messages.SUCCESS);
 	}
@@ -79,9 +79,9 @@ public class ColorManager implements ColorService {
 	
 	private Color checkIfColorExists(int id){
 		
-		Color color = this.colorDao.getByColorId(id);
+		Color color = this.colorDao.getColorById(id);
 		
-		if (color != null) {
+		if (color == null) {
 			throw new BusinessException(Messages.COLOR_NOT_FOUND);
 		}
 		return color;
@@ -90,7 +90,7 @@ public class ColorManager implements ColorService {
 		
 		private boolean checkIfColorNameExists(String name){
 			
-			if (this.colorDao.getByColorName(name) == null) {
+			if (this.colorDao.getColorByName(name) == null) {
 				return true;
 			}
 			throw new BusinessException(Messages.COLOR_EXISTS);

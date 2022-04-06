@@ -11,13 +11,13 @@ import com.turkcell.rentACarProject.entities.concretes.Invoice;
 @Repository
 public interface InvoiceDao extends JpaRepository<Invoice, Integer>{
 
-	Invoice getByInvoiceId(int id);
+	Invoice getInvoiceById(int id);
 	
-	List<Invoice> getByCustomer_customerId(int customerId);
+	List<Invoice> getByCustomer_id(int id);
 	
-	List<Invoice> findByCreateDateBetween(LocalDate creationDate, LocalDate returnDate);
+	List<Invoice> findByCreationDateBetween(LocalDate creationDate, LocalDate returnDate);
 	
-	boolean existsByInvoiceNo(String invoiceNumber);
+	boolean existsByInvoiceNumber(String invoiceNumber);
 	
-	Invoice getByRentalCar_rentalCarId(int carId);
+	Invoice getByRental_id(int id);
 }

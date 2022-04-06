@@ -68,7 +68,7 @@ public class InvoiceManager implements InvoiceService{
 	@Override
 	public DataResult<List<ListInvoiceDto>> getByDateOfBetween(LocalDate creationDate, LocalDate returnDate) {
 		
-		List<Invoice> result = this.invoiceDao.findByCreateDateBetween(creationDate, returnDate);
+		List<Invoice> result = this.invoiceDao.findByCreationDateBetween(creationDate, returnDate);
 		List<ListInvoiceDto> response = result.stream()
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, ListInvoiceDto.class))
 				.collect(Collectors.toList());
@@ -77,9 +77,9 @@ public class InvoiceManager implements InvoiceService{
 	}
 
 	@Override
-	public DataResult<List<ListInvoiceDto>> getInvoiceByCustomer(int customerId) {
+	public DataResult<List<ListInvoiceDto>> getInvoiceByCustomer(int id) {
 		
-		List<Invoice> result = this.invoiceDao.getByCustomer_customerId(customerId);
+		List<Invoice> result = this.invoiceDao.getByCustomer_id(id);
 		List<ListInvoiceDto> response = result.stream()
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, ListInvoiceDto.class))
 				.collect(Collectors.toList());
@@ -115,7 +115,7 @@ public class InvoiceManager implements InvoiceService{
 		
 		checkIfInvoiceExists(updateInvoiceRequest.getId());
 
-		Invoice invoice = this.invoiceDao.getByInvoiceId(updateInvoiceRequest.getId());
+		Invoice invoice = this.invoiceDao.getInvoiceById(updateInvoiceRequest.getId());
 		invoice.setCreationDate(updateInvoiceRequest.getCreationDate());
 		this.invoiceDao.save(invoice);
 
@@ -124,7 +124,7 @@ public class InvoiceManager implements InvoiceService{
 	
 	private Invoice checkIfInvoiceExists(int id) {
 		
-		Invoice invoice =this.invoiceDao.getByInvoiceId(id);
+		Invoice invoice =this.invoiceDao.getInvoiceById(id);
 		
 		if(invoice==null) {
 			throw new BusinessException(Messages.INVOICE_NOT_FOUND);

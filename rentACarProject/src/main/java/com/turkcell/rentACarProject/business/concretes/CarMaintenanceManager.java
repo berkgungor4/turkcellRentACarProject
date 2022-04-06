@@ -63,7 +63,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	@Override
 	public DataResult<List<ListCarMaintenanceDto>> getByCarId(int carId) {
 
-		List<CarMaintenance> carMaintenanceList = this.carMaintenanceDao.getByCar_CarId(carId);
+		List<CarMaintenance> carMaintenanceList = this.carMaintenanceDao.getByCar_id(carId);
 		List<ListCarMaintenanceDto> response = carMaintenanceList.stream()
 				.map(carMaintenance -> modelMapperService.forDto().map(carMaintenance, ListCarMaintenanceDto.class))
 				.collect(Collectors.toList());
@@ -104,7 +104,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	@Override
 	public Result isCarInMaintenance(int carId) {
 
-		if (this.carMaintenanceDao.getByCarMaintenanceId(carId) != null)
+		if (this.carMaintenanceDao.getCarMaintenanceById(carId) != null)
 			throw new BusinessException(Messages.CAR_MAINTENANCE_CAR_IN_RENT );
 
 		else

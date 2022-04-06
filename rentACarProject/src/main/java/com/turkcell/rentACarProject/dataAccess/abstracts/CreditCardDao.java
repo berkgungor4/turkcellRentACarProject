@@ -8,5 +8,5 @@ import com.turkcell.rentACarProject.entities.concretes.CreditCard;
 @Repository
 public interface CreditCardDao extends JpaRepository<CreditCard, Integer> {
 	
-	CreditCard getByCreditCardId(int id);
+	CreditCard getCreditCardById(int id);
 }

@@ -1,5 +1,7 @@
 package com.turkcell.rentACarProject.business.dtos.payment;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ListPaymentDto {
 	
-	private int id;
+	private int paymentId;
+	private LocalDate paymentDate;
+	private int customerId;
+	private int rentalCarId;
 	private int invoiceId;
-	private int orderedAdditionalServiceId;
+	private double paymentTotal;
 }

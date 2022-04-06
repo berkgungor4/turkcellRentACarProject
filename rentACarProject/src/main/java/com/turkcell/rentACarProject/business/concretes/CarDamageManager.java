@@ -52,7 +52,7 @@ public class CarDamageManager implements CarDamageService {
 
 		checkIfCarDamageExists(id);
 		
-		CarDamage result = this.carDamageDao.getById(id);
+		CarDamage result = this.carDamageDao.getCarDamageById(id);
 		ListCarDamageDto response = this.modelMapperService.forDto().map(result, ListCarDamageDto.class);
 		
 		return new SuccessDataResult<ListCarDamageDto>(response, Messages.SUCCESS);
@@ -63,7 +63,7 @@ public class CarDamageManager implements CarDamageService {
 
 		checkIfCarExists(carId);
 		
-		List<ListCarDamageDto> result = this.carDamageDao.getByCar_CarId(carId);
+		List<CarDamage> result = this.carDamageDao.getByCar_id(carId);
 		
 		List<ListCarDamageDto> response = result.stream().map(carDamage ->this.modelMapperService.forDto()
 				.map(carDamage, ListCarDamageDto.class)).collect(Collectors.toList());

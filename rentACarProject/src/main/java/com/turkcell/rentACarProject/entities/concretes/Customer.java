@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -34,4 +35,7 @@ public class Customer extends User {
 	
 	@OneToMany(mappedBy = "customer")
 	private List<Invoice> invoices;
+	
+	@OneToOne(mappedBy = "customer")
+	private Payment payment;
 }

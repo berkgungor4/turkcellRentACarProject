@@ -30,11 +30,20 @@ public class Payment {
 	@Column(name = "payment_date")
 	private LocalDate paymentDate;
 	
+	@Column(name = "payment_total")
+	private double paymentTotal;
+	
 	@OneToOne
 	@JoinColumn(name="invoice_id")
 	private Invoice invoice;
 	
 	@OneToOne
-	@JoinColumn(name="ordered_additional_service_id")
-	private OrderedAdditionalService orderedAdditionalService;
+	@Column(name = "customer_id")
+	private Customer customer;
+	
+	@OneToOne
+	@Column(name = "rental_id")
+	private Rental rental;
+	
+
 }

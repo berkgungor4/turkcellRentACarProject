@@ -94,7 +94,7 @@ public class PaymentManager implements PaymentService {
 	
 	private Payment checkIfPaymentExists(int id) {
 
-		Payment payment = this.paymentDao.getByPaymentId(id);
+		Payment payment = this.paymentDao.getPaymentById(id);
 
 		if (payment == null) {
 			throw new BusinessException(Messages.PAYMENT_ADD);
@@ -114,6 +114,14 @@ public class PaymentManager implements PaymentService {
 	    if(this.orderedAdditionalServiceService.getById(orderedAdditionalServiceId)==null) {
 	    	throw new BusinessException(Messages.ORDERED_ADDITIONAL_SERVICE_NOT_FOUND);
 	    }
+	}
+
+	@Override
+	public void addForLateDelivery(CreatePaymentRequest createPaymentRequest) {
+		
+		this.posService.payments(createPaymentRequest.getCreateCreditCard().getCardOwnerName(), createPaymentRequest.getCreateCreditCard().getCardNumber(), createPaymentRequest.getCreateCreditCard().getCardCvvNumber());
+		runLateDeliveriesPaymentProcess(createPaymentRequest);
+		
 	}
 	
 }

@@ -12,6 +12,7 @@ public interface PaymentService {
 	
 	DataResult<List<ListPaymentDto>> getAll();
 	DataResult<ListPaymentDto> getById(int id);
+	void addForLateDelivery(CreatePaymentRequest createPaymentRequest);
 
 	Result create(CreatePaymentRequest createPaymentRequest);
 	Result delete(DeletePaymentRequest deletePaymentRequest);

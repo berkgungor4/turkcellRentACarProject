@@ -48,7 +48,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	@Override
 	public DataResult<ListAdditionalServiceDto> getById(int id) {
 
-		var result = this.additionalServiceDao.getByAdditionalServiceId(id);
+		var result = this.additionalServiceDao.getAdditionalServiceById(id);
 
 		if (result != null) {
 			ListAdditionalServiceDto response = this.modelMapperService.forDto().map(result,
@@ -75,7 +75,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		checkIfAdditionalServiceExists(updateAdditionalServiceRequest.getId());
 
 		AdditionalService additionalService = this.additionalServiceDao
-				.getByAdditionalServiceId(updateAdditionalServiceRequest.getId());
+				.getAdditionalServiceById(updateAdditionalServiceRequest.getId());
 
 		this.additionalServiceDao.save(additionalService);
 
