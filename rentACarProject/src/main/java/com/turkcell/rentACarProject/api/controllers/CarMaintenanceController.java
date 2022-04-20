@@ -44,7 +44,7 @@ public class CarMaintenanceController {
 	
 	@GetMapping("/getAllByCarId")
 	public DataResult<List<ListCarMaintenanceDto>> getByCarId(@RequestParam int carId) {
-		return this.carMaintenanceService.getByCarId(carId);
+		return this.carMaintenanceService.getCarMaintenanceByCar(carId);
 	}
 	
 	@PostMapping("/create")

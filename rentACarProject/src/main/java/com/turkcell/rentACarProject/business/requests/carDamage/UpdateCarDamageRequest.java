@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class UpdateCarDamageRequest {
 	
 	private int id;
-	private int carId;
 	private String description; 
 }

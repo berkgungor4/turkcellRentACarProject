@@ -41,8 +41,8 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 	@Override
 	public DataResult<List<ListCarMaintenanceDto>> getAll() {
-		var result = this.carMaintenanceDao.findAll();
-		List<ListCarMaintenanceDto> response = result.stream().map(
+		List<CarMaintenance> result = this.carMaintenanceDao.findAll();
+ 		List<ListCarMaintenanceDto> response = result.stream().map(
 				carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, ListCarMaintenanceDto.class))
 				.collect(Collectors.toList());
 
@@ -61,7 +61,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	@Override
-	public DataResult<List<ListCarMaintenanceDto>> getByCarId(int carId) {
+	public DataResult<List<ListCarMaintenanceDto>> getCarMaintenanceByCar(int carId) {
 
 		List<CarMaintenance> carMaintenanceList = this.carMaintenanceDao.getByCar_id(carId);
 		List<ListCarMaintenanceDto> response = carMaintenanceList.stream()

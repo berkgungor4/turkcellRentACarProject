@@ -48,9 +48,10 @@ public class Messages {
 	public static final String CORPORATE_CUSTOMER_DELETE = "CorporateCustomer.Deleted";
 	public static final String CORPORATE_CUSTOMER_NOT_FOUND = "Cannot find a corporate customer with this Id";
 	
-	public static final String CREDİT_CARD_ADD = "CreditCard.Added";
-	public static final String CREDİT_CARD_UPDATE = "CreditCard.Updated";
-	public static final String CREDİT_CARD_DELETE = "CreditCard.Deleted";
+	public static final String CREDIT_CARD_ADD = "CreditCard.Added";
+	public static final String CREDIT_CARD_UPDATE = "CreditCard.Updated";
+	public static final String CREDIT_CARD_DELETE = "CreditCard.Deleted";
+	public static final String CREDIT_CARD_EXISTS = "This credit card is already used";
 
 	public static final String INDIVIDUAL_CUSTOMER_ADD = "IndividualCustomer.Added";
 	public static final String INDIVIDUAL_CUSTOMER_UPDATE = "IndividualCustomer.Updated";
@@ -78,5 +79,6 @@ public class Messages {
 	public static final String RENTAL_DELETE = "Rental.Deleted";
 	public static final String RENTAL_NOT_FOUND = "Cannot find a rental with this Id";
 	public static final String RENTAL_IN_MAINTENANCE = "Rental can't be added (Car is under maintenance at requested times";
+	public static final String RENTAL_RETURN_DATE_ERROR = "Return date can't be earlier than rental date";
 
 }

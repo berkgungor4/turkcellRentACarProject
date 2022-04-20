@@ -15,8 +15,11 @@ public class CreateRentalRequest {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate rentDate;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate returnDate;
+	
     private int customerId;
     private int carId;
     private int initialCityId;
-    private int returnMileage;
+    private int returnCityId;
 }

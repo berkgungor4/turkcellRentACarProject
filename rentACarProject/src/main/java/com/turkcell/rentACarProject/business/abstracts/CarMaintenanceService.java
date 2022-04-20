@@ -13,7 +13,7 @@ public interface CarMaintenanceService {
 	
 	DataResult<List<ListCarMaintenanceDto>> getAll();
 	DataResult<ListCarMaintenanceDto> getById(int id);
-	DataResult<List<ListCarMaintenanceDto>> getByCarId(int carId);
+	DataResult<List<ListCarMaintenanceDto>> getCarMaintenanceByCar(int carId);
 	
 	Result create(CreateCarMaintenanceRequest createCarMaintenanceRequest);
 	Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest);

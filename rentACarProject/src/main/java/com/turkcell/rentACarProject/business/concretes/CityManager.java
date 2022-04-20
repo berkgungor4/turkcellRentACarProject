@@ -35,7 +35,7 @@ public class CityManager implements CityService{
 	@Override
 	public DataResult<List<ListCityDto>> getAll() {
 		
-		var result = this.cityDao.findAll();
+		List<City> result = this.cityDao.findAll();
 		
 		List<ListCityDto> response = result.stream()
 				.map(city -> this.modelMapperService.forDto().map(city, ListCityDto.class))
@@ -61,9 +61,7 @@ public class CityManager implements CityService{
 	public Result create(CreateCityRequest createCityRequest) {
 		
 		City city = this.modelMapperService.forRequest().map(createCityRequest, City.class);
-		
 		this.cityDao.save(city);
-		
 		return new SuccessResult(Messages.CITY_ADD);
 	}
 

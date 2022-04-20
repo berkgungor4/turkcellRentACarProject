@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class CreateColorRequest {
 
 	private String name;
-	
 }

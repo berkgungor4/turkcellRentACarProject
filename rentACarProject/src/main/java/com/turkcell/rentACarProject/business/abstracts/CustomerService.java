@@ -9,4 +9,6 @@ public interface CustomerService {
 	
 	DataResult<List<ListCustomerDto>> getAll();
 	DataResult<ListCustomerDto> getById(int id);
+	
+	boolean checkCustomerIfForRental(int id);
 }

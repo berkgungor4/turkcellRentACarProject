@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -64,10 +63,10 @@ public class Rental {
     @Column(name = "return_mileage")
     private Integer returnMileage;
     
-    @OneToOne(mappedBy = "rental")
-    private Invoice invoice;
-    
-	@OneToOne(mappedBy = "rental")
-	private Payment payment;
+	@OneToMany(mappedBy = "rental")
+	private List<OrderedAdditionalService> orderedAdditionalServices;
+
+	@OneToMany(mappedBy = "rental")
+	private List<Invoice> invoices;
     
 }

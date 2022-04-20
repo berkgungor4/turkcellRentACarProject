@@ -94,4 +94,5 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 			throw new BusinessException(Messages.CORPORATE_CUSTOMER_NOT_FOUND);
 		}
 	}
+	
 }

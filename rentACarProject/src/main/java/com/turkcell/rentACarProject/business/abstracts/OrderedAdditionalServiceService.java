@@ -13,7 +13,8 @@ public interface OrderedAdditionalServiceService {
 
 	DataResult<List<ListOrderedAdditionalServiceDto>> getAll();
 	DataResult<ListOrderedAdditionalServiceDto> getById(int id);
-	DataResult<List<ListOrderedAdditionalServiceDto>> findAllByRentalId(int rentalId);
+	DataResult<List<ListOrderedAdditionalServiceDto>> getOrderedAdditionalServiceByRental(int rentalId);
+	DataResult<List<ListOrderedAdditionalServiceDto>> getOrderedAdditionalServiceByAdditionalService(int additionalServiceId);
 	
 	Result create(CreateOrderedAdditionalServiceRequest createOrderedAdditionalServiceRequest);
 	Result update(UpdateOrderedAdditionalServiceRequest updateOrderedAdditionalServiceRequest);

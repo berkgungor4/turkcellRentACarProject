@@ -13,5 +13,5 @@ public class ListCorporateCustomerDto {
 	private String email;
 	private String password;
 	private String name;
-	private int taxNumber;
+	private String taxNumber;
 }

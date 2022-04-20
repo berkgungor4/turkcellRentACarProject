@@ -14,8 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreatePaymentRequest {
 	
-	private List<Integer> additionalServiceIds;
+	private List<Integer> additionalServiceId;
 	private CreateRentalRequest rental;
 	private CreateCreditCardRequest createCreditCard;
-	private int rentalCarId;
 }

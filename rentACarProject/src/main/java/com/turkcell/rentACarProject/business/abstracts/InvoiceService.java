@@ -16,8 +16,9 @@ public interface InvoiceService {
 	DataResult<ListInvoiceDto> getById(int id);
 	DataResult<List<ListInvoiceDto>> getByDateOfBetween (LocalDate creationDate, LocalDate returnDate);
 	DataResult<List<ListInvoiceDto>> getInvoiceByCustomer(int customerId);
+	DataResult<List<ListInvoiceDto>> getInvoiceByRental(int rentalId);
 	
-	Result create(CreateInvoiceRequest createInvoiceRequest);
+	Result createForCustomer(CreateInvoiceRequest createInvoiceRequest);
 	Result update(UpdateInvoiceRequest updateInvoiceRequest);
 	Result delete(DeleteInvoiceRequest deleteInvoiceRequest);
 }

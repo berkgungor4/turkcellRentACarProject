@@ -18,5 +18,4 @@ public class UpdateCarMaintenanceRequest {
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate returnDate;
-	private int carId;
 }

@@ -59,7 +59,7 @@ public class CarDamageManager implements CarDamageService {
 	}
 
 	@Override
-	public DataResult<List<ListCarDamageDto>> getByCarId(int carId) {
+	public DataResult<List<ListCarDamageDto>> getCarDamageByCar(int carId) {
 
 		checkIfCarExists(carId);
 		

@@ -49,4 +49,12 @@ public class CustomerManager implements CustomerService {
 		return new SuccessDataResult<ListCustomerDto>(response, Messages.SUCCESS);
 	}
 
+	@Override
+	public boolean checkCustomerIfForRental(int id) {
+		if(this.customerDao.getById(id)==null) {
+			return false;
+		}
+		return true;
+	}
+
 }

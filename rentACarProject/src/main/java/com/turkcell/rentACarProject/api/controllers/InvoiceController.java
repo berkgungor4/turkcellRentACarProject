@@ -55,9 +55,14 @@ public class InvoiceController {
 		return this.invoiceService.getInvoiceByCustomer(customerId);
 	}
 	
+	@GetMapping("/getInvoiceByRental")
+	DataResult<List<ListInvoiceDto>> getInvoiceByRental(@RequestParam int rentalId){
+		return this.invoiceService.getInvoiceByRental(rentalId);
+	}
+	
 	@PostMapping("/create")
-	Result create(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
-		return this.invoiceService.create(createInvoiceRequest);
+	public Result createForCustomer(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
+		return this.invoiceService.createForCustomer(createInvoiceRequest);
 	}
 	
 	@DeleteMapping("/delete")

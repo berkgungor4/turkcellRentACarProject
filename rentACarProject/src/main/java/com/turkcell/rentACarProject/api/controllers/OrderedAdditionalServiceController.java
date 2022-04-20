@@ -45,7 +45,7 @@ public class OrderedAdditionalServiceController {
 	
 	@GetMapping("/findAllByRentalId")
 	DataResult<List<ListOrderedAdditionalServiceDto>> findAllByRentalId(@RequestParam int rentalId){
-		return this.orderedAdditionalServiceService.findAllByRentalId(rentalId);
+		return this.orderedAdditionalServiceService.getOrderedAdditionalServiceByRental(rentalId);
 	}
 	
 	@PostMapping("/create")

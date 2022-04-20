@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -32,18 +31,15 @@ public class Payment {
 	
 	@Column(name = "payment_total")
 	private double paymentTotal;
-	
-	@OneToOne
+
 	@JoinColumn(name="invoice_id")
-	private Invoice invoice;
-	
-	@OneToOne
+	private int invoiceId;
+
 	@Column(name = "customer_id")
-	private Customer customer;
-	
-	@OneToOne
+	private int customerId;
+
 	@Column(name = "rental_id")
-	private Rental rental;
+	private int rentalId;
 	
 
 }

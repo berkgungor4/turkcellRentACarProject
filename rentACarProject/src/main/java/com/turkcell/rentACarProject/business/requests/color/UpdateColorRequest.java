@@ -11,5 +11,4 @@ public class UpdateColorRequest {
 
 	private int id;
 	private String name;
-	
 }

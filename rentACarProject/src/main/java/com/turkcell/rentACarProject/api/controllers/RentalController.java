@@ -21,6 +21,7 @@ import com.turkcell.rentACarProject.business.requests.rental.DeleteRentalRequest
 import com.turkcell.rentACarProject.business.requests.rental.UpdateRentalRequest;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
+import com.turkcell.rentACarProject.entities.concretes.Rental;
 
 @RestController
 @RequestMapping("/api/rentals")
@@ -45,12 +46,12 @@ public class RentalController {
 	
 	@GetMapping("/getByCarId")
 	DataResult<List<ListRentalDto>> getByCarId(int carId) {
-		return this.rentalService.getByCarId(carId);
+		return this.rentalService.getRentalByCar(carId);
 	}
 	
 	@PostMapping("/create")
-	Result create(@RequestBody @Valid CreateRentalRequest createRentalRequest) {
-		return this.rentalService.create(createRentalRequest);
+	Rental createForCustomer(@RequestBody @Valid CreateRentalRequest createRentalRequest) {
+		return this.rentalService.createForCustomer(createRentalRequest);
 	}
 	
 	@DeleteMapping("/delete")

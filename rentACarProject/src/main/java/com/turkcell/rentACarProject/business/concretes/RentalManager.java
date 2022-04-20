@@ -7,13 +7,19 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.turkcell.rentACarProject.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentACarProject.business.abstracts.CarService;
+import com.turkcell.rentACarProject.business.abstracts.CustomerService;
+import com.turkcell.rentACarProject.business.abstracts.PaymentService;
 import com.turkcell.rentACarProject.business.abstracts.RentalService;
 import com.turkcell.rentACarProject.business.constants.Messages;
 import com.turkcell.rentACarProject.business.dtos.car.ListCarDto;
+import com.turkcell.rentACarProject.business.dtos.customer.ListCustomerDto;
 import com.turkcell.rentACarProject.business.dtos.rental.ListRentalDto;
+import com.turkcell.rentACarProject.business.requests.creditCard.CreateCreditCardRequest;
+import com.turkcell.rentACarProject.business.requests.lateDelivery.CreateLateDeliveryRequest;
+import com.turkcell.rentACarProject.business.requests.lateDelivery.UpdateLateDeliveryRequest;
 import com.turkcell.rentACarProject.business.requests.rental.CreateRentalRequest;
 import com.turkcell.rentACarProject.business.requests.rental.DeleteRentalRequest;
 import com.turkcell.rentACarProject.business.requests.rental.UpdateRentalRequest;
@@ -24,6 +30,7 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 import com.turkcell.rentACarProject.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentACarProject.core.utilities.results.SuccessResult;
 import com.turkcell.rentACarProject.dataAccess.abstracts.RentalDao;
+import com.turkcell.rentACarProject.entities.concretes.Customer;
 import com.turkcell.rentACarProject.entities.concretes.Rental;
 
 @Service
@@ -31,17 +38,20 @@ public class RentalManager implements RentalService {
 
 	private RentalDao rentalDao;
 	private ModelMapperService modelMapperService;
-	private CarMaintenanceService carMaintenanceService;
 	private CarService carService;
+	private PaymentService paymentService;
+	private CustomerService customerService;
 	
 	@Autowired
-	public RentalManager(RentalDao rentalDao, ModelMapperService modelMapperService, 
-			@Lazy CarMaintenanceService carMaintenanceService, CarService carService) {
+	@Lazy
+	public RentalManager(RentalDao rentalDao, ModelMapperService modelMapperService, CarService carService, 
+			PaymentService paymentService, CustomerService customerService) {
 		
 		this.rentalDao = rentalDao;
 		this.modelMapperService = modelMapperService;
-		this.carMaintenanceService = carMaintenanceService;
 		this.carService = carService;
+		this.paymentService = paymentService;
+		this.customerService = customerService;
 	}
 	
 	@Override
@@ -68,7 +78,7 @@ public class RentalManager implements RentalService {
 	}
 	
 	@Override
-	public DataResult<List<ListRentalDto>> getByCarId(int carId) {
+	public DataResult<List<ListRentalDto>> getRentalByCar(int carId) {
 		
 		List<Rental> result = this.rentalDao.getByCar_id(carId);
 		List<ListRentalDto> response = result.stream()
@@ -78,22 +88,49 @@ public class RentalManager implements RentalService {
 		return new SuccessDataResult<List<ListRentalDto>>(response, Messages.SUCCESS);
 	}
 	
+	@Transactional
 	@Override
-	public Result create(CreateRentalRequest createRentalRequest) {
+	public Result lateDelivery(int id, UpdateLateDeliveryRequest updateLateDeliveryRequest, UpdateRentalRequest updateRentalRequest) {
 		
-		carMaintenanceService.isCarInMaintenance(createRentalRequest.getCarId());
-		   
-	    Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
-	    
-	    rental.setId(0);
+		checkIfRentalExists(id);
 		
+		Rental rental = this.rentalDao.getById(id);
+
+		checkIfDates(rental, updateLateDeliveryRequest.getUpdateRentalRequest());
+		
+		CreateLateDeliveryRequest createLateDeliveryRequest = createPayment(id);
+
+		createLateDeliveryRequest.setCreateCreditCardRequest(createCreditCard(updateLateDeliveryRequest));
+	
+		updateTotalPrice(rental, updateLateDeliveryRequest.getUpdateRentalRequest());
+
+		rental.getCar().setMileage(updateLateDeliveryRequest.getUpdateRentalRequest().getReturnMileage());
+
+		rental.setReturnDate(updateRentalRequest.getReturnDate());
+		rental.setReturnMileage(updateRentalRequest.getReturnMileage());
+		
+		rentalDao.save(rental);
+		
+		this.paymentService.createForLateDelivery(createLateDeliveryRequest);
+
+		return new SuccessResult(Messages.RENTAL_UPDATE);
+	}
+	
+	@Override
+	public Rental createForCustomer(CreateRentalRequest createRentalRequest) {
+		Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
+
+		rental.setId(0);
+
 		rental.setTotalPrice(rentalCalculation(rental));
-		
+
+		rental.setCustomer(customerCorrectionAndCheckIfCustomerExists(createRentalRequest.getCustomerId()));
+
 		rental.setInitialMileage(this.carService.getById(createRentalRequest.getCarId()).getData().getMileage());
-		
-	    this.rentalDao.save(rental);
-	    
-	    return new SuccessResult(Messages.RENTAL_ADD);
+
+		this.rentalDao.save(rental);
+
+		return rental;
 	}
 
 	@Override
@@ -110,15 +147,20 @@ public class RentalManager implements RentalService {
 	public Result update(UpdateRentalRequest updateRentalRequest) {
 		
 		checkIfRentalExists(updateRentalRequest.getId());
+
+		Rental rental = this.rentalDao.getById(updateRentalRequest.getId());
 		
-		Rental rental = this.rentalDao.getRentalById(updateRentalRequest.getId());
-		rental.setTotalPrice(updateTotalPrice(rental, updateRentalRequest)); 
+		checkIfDates(rental, updateRentalRequest);
+
+		updateTotalPrice(rental, updateRentalRequest);
+
 		rental.getCar().setMileage(updateRentalRequest.getReturnMileage());
-		
+
 		rental.setReturnDate(updateRentalRequest.getReturnDate());
 		rental.setReturnMileage(updateRentalRequest.getReturnMileage());
 		
-		this.rentalDao.save(rental);
+		rentalDao.save(rental);
+		
 		return new SuccessResult(Messages.RENTAL_UPDATE);
 	}
 	
@@ -160,25 +202,57 @@ public class RentalManager implements RentalService {
     		return totalPrice;
 	}
 	
-	private double updateTotalPrice(Rental rental, UpdateRentalRequest updateRentalRequest) {
+	private void updateTotalPrice(Rental rental, UpdateRentalRequest updateRentalRequest) {
+		
+		double totalPrice = 0;
 
 		long dateBetween = ChronoUnit.DAYS.between(rental.getReturnDate(), updateRentalRequest.getReturnDate());
 		
 		ListCarDto car = this.carService.getById(rental.getCar().getId()).getData();
-		
-		double totalPrice=0;
-		double rentPrice=car.getDailyPrice();
-		
-	    if(dateBetween!=0) {
-	    	
-	    if(rental.getInitialCity().getId()!=updateRentalRequest.getReturnCityId()) {
-	        	totalPrice=totalPrice+750;	
+
+		double rentPrice = car.getDailyPrice();
+
+		if (rental.getInitialCity().getId() != updateRentalRequest.getReturnCityId()) {
+			totalPrice = totalPrice + 750;
 		}
+
+		totalPrice = rentPrice * dateBetween;
 	    
-		totalPrice=rentPrice*dateBetween;
-	}	
-	    System.out.println(totalPrice);
-	    return totalPrice;
+	    rental.setTotalPrice(totalPrice);
+	}
+	
+	private CreateLateDeliveryRequest createPayment(int id) {
+		
+		CreateLateDeliveryRequest createLateDeliveryRequest = new CreateLateDeliveryRequest();
+		
+		createLateDeliveryRequest.setRentalId(id);
+		
+		return createLateDeliveryRequest;
+	}
+	
+	private void checkIfDates(Rental rental, UpdateRentalRequest updateRentalRequest) {
+		
+		if(rental.getReturnDate().isAfter(updateRentalRequest.getReturnDate())) {
+			throw new BusinessException(Messages.RENTAL_RETURN_DATE_ERROR);
+		}
+	}
+	
+	private CreateCreditCardRequest createCreditCard(UpdateLateDeliveryRequest updateLateDeliveryRequest) {
+		
+		CreateCreditCardRequest createCreditCardRequest = new CreateCreditCardRequest();
+		createCreditCardRequest.setCardOwnerName(updateLateDeliveryRequest.getCreateCreditCardRequest().getCardOwnerName());
+		createCreditCardRequest.setCardCvvNumber(updateLateDeliveryRequest.getCreateCreditCardRequest().getCardCvvNumber());
+		createCreditCardRequest.setCardNumber(updateLateDeliveryRequest.getCreateCreditCardRequest().getCardNumber());
+	
+		return createCreditCardRequest;
+	}
+	
+	private Customer customerCorrectionAndCheckIfCustomerExists(int customerId) {
+
+		ListCustomerDto listCustomerDto = this.customerService.getById(customerId).getData();
+		Customer customer = this.modelMapperService.forDto().map(listCustomerDto, Customer.class);
+
+		return customer;
 	}
 
 }

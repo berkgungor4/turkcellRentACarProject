@@ -12,5 +12,5 @@ public class CreateCorporateCustomerRequest {
 	private String email;
 	private String password;
 	private String name;
-	private int taxNumber;
+	private String taxNumber;
 }

@@ -2,8 +2,6 @@ package com.turkcell.rentACarProject.business.dtos.invoice;
 
 import java.time.LocalDate;
 
-import com.turkcell.rentACarProject.entities.concretes.Customer;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +18,6 @@ public class ListInvoiceDto {
 	private LocalDate returnDate;
 	private int numberOfDaysRented;
 	private double rentTotalPrice;
-	private int rental;
-	private Customer customer;
+	private int customerId;
+	private int rentalId;
 }

@@ -32,19 +32,19 @@ public class PaymentController {
 		this.paymentService = paymentService;
 	}
 	
-	@GetMapping("/getall")
+	@GetMapping("/getAll")
 	DataResult<List<ListPaymentDto>> getAll(){
 		return this.paymentService.getAll();
 	}
 	
-	@GetMapping("/getall")
+	@GetMapping("/getById")
 	DataResult<ListPaymentDto> getById(@RequestParam int id){
 		return this.paymentService.getById(id);
 	}
 	
 	@PostMapping("/create")
-	Result create(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
-		return this.paymentService.create(createPaymentRequest);
+	Result create(boolean registered, @RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
+		return this.paymentService.create(registered, createPaymentRequest);
 	}
 	
 	@DeleteMapping("/delete")
