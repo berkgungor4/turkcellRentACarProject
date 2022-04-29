@@ -78,7 +78,7 @@ public class Messages {
 	public static final String RENTAL_UPDATE = "Rental.Updated";
 	public static final String RENTAL_DELETE = "Rental.Deleted";
 	public static final String RENTAL_NOT_FOUND = "Cannot find a rental with this Id";
-	public static final String RENTAL_IN_MAINTENANCE = "Rental can't be added (Car is under maintenance at requested times";
+	public static final String RENTAL_IN_MAINTENANCE = "Rental can't be added (Car is under maintenance at requested times)";
 	public static final String RENTAL_RETURN_DATE_ERROR = "Return date can't be earlier than rental date";
 
 }

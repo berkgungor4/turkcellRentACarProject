@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +31,7 @@ public class Payment {
 	@Column(name = "payment_total")
 	private double paymentTotal;
 
-	@JoinColumn(name="invoice_id")
+	@Column(name="invoice_id")
 	private int invoiceId;
 
 	@Column(name = "customer_id")
@@ -40,6 +39,5 @@ public class Payment {
 
 	@Column(name = "rental_id")
 	private int rentalId;
-	
 
 }

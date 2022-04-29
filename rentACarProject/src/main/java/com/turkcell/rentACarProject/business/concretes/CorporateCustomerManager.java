@@ -36,7 +36,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	@Override
 	public DataResult<List<ListCorporateCustomerDto>> getAll() {
 
-		var result = this.corporateCustomerDao.findAll();
+		List<CorporateCustomer> result = this.corporateCustomerDao.findAll();
 		
 		List<ListCorporateCustomerDto> response = result.stream()
 				.map(corporateCustomer -> this.modelMapperService.forDto().map(corporateCustomer, ListCorporateCustomerDto.class))

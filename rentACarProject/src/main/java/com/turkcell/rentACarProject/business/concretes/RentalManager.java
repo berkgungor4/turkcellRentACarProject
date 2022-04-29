@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.turkcell.rentACarProject.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentACarProject.business.abstracts.CarService;
 import com.turkcell.rentACarProject.business.abstracts.CustomerService;
 import com.turkcell.rentACarProject.business.abstracts.PaymentService;
@@ -41,23 +42,25 @@ public class RentalManager implements RentalService {
 	private CarService carService;
 	private PaymentService paymentService;
 	private CustomerService customerService;
+	private CarMaintenanceService carMaintenanceService;
 	
 	@Autowired
 	@Lazy
 	public RentalManager(RentalDao rentalDao, ModelMapperService modelMapperService, CarService carService, 
-			PaymentService paymentService, CustomerService customerService) {
+			PaymentService paymentService, CustomerService customerService, CarMaintenanceService carMaintenanceService) {
 		
 		this.rentalDao = rentalDao;
 		this.modelMapperService = modelMapperService;
 		this.carService = carService;
 		this.paymentService = paymentService;
 		this.customerService = customerService;
+		this.carMaintenanceService = carMaintenanceService;
 	}
 	
 	@Override
 	public DataResult<List<ListRentalDto>> getAll() {
 		
-		var result = this.rentalDao.findAll();
+		List<Rental> result = this.rentalDao.findAll();
 		List<ListRentalDto> response = result.stream()
 				.map(rental -> this.modelMapperService.forDto().map(rental, ListRentalDto.class))
 				.collect(Collectors.toList());
@@ -118,6 +121,9 @@ public class RentalManager implements RentalService {
 	
 	@Override
 	public Rental createForCustomer(CreateRentalRequest createRentalRequest) {
+		
+		carMaintenanceService.isCarInMaintenance(createRentalRequest.getCarId());
+		
 		Rental rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
 
 		rental.setId(0);

@@ -23,6 +23,7 @@ import com.turkcell.rentACarProject.business.requests.invoice.DeleteInvoiceReque
 import com.turkcell.rentACarProject.business.requests.invoice.UpdateInvoiceRequest;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
+import com.turkcell.rentACarProject.entities.concretes.Invoice;
 
 @RestController
 @RequestMapping("/api/invoices")
@@ -61,7 +62,7 @@ public class InvoiceController {
 	}
 	
 	@PostMapping("/create")
-	public Result createForCustomer(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
+	public Invoice createForCustomer(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
 		return this.invoiceService.createForCustomer(createInvoiceRequest);
 	}
 	

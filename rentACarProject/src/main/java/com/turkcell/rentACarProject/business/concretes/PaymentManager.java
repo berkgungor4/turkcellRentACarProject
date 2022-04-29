@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.turkcell.rentACarProject.business.abstracts.CreditCardService;
 import com.turkcell.rentACarProject.business.abstracts.CustomerService;
 import com.turkcell.rentACarProject.business.abstracts.InvoiceService;
+import com.turkcell.rentACarProject.business.abstracts.OrderedAdditionalServiceService;
 import com.turkcell.rentACarProject.business.abstracts.PaymentService;
 import com.turkcell.rentACarProject.business.abstracts.PosService;
 import com.turkcell.rentACarProject.business.abstracts.RentalService;
@@ -44,10 +46,12 @@ public class PaymentManager implements PaymentService {
 	private CustomerService customerService;
 	private RentalService rentalService;
 	private CreditCardService creditCardService;
+	private OrderedAdditionalServiceService orderedAdditionalServiceService; 
 
 	@Autowired
 	public PaymentManager(PaymentDao paymentDao, ModelMapperService modelMapperService, InvoiceService invoiceService,
-			PosService posService, CustomerService customerService, RentalService rentalService, CreditCardService creditCardService) {
+			PosService posService, CustomerService customerService, RentalService rentalService, CreditCardService creditCardService,
+			OrderedAdditionalServiceService orderedAdditionalServiceService) {
 		this.paymentDao = paymentDao;
 		this.modelMapperService = modelMapperService;
 		this.invoiceService = invoiceService;
@@ -55,6 +59,7 @@ public class PaymentManager implements PaymentService {
 		this.customerService = customerService;
 		this.rentalService = rentalService;
 		this.creditCardService = creditCardService;
+		this.orderedAdditionalServiceService = orderedAdditionalServiceService;
 	}
 
 	@Override
@@ -68,33 +73,29 @@ public class PaymentManager implements PaymentService {
 
 		return new SuccessDataResult<List<ListPaymentDto>>(response, Messages.SUCCESS);
 	}
-
-	@Override
-	public DataResult<ListPaymentDto> getById(int id) {
-
-		Payment result = checkIfPaymentExists(id);
-
-		ListPaymentDto response = this.modelMapperService.forDto().map(result, ListPaymentDto.class);
-
-		return new SuccessDataResult<ListPaymentDto>(response, Messages.SUCCESS);
-
-	}
-
+	
+	@Transactional
 	@Override
 	public Result create(boolean registered, CreatePaymentRequest createPaymentRequest) {
-
-		this.posService.payments(createPaymentRequest.getCreateCreditCard().getCardOwnerName(),
-				createPaymentRequest.getCreateCreditCard().getCardNumber(),
-				createPaymentRequest.getCreateCreditCard().getCardCvvNumber());
-
+		
+		this.posService.payments(createPaymentRequest.getCreateCreditCardRequest().getCardOwnerName(), createPaymentRequest.getCreateCreditCardRequest().getCardNumber(), createPaymentRequest.getCreateCreditCardRequest().getCardCvvNumber());
+		
 		runPaymentProcess(registered, createPaymentRequest);
 
 		return new SuccessResult(Messages.PAYMENT_ADD);
 	}
-
+	
+	@Transactional
+	@Override
+	public void createForLateDelivery(CreateLateDeliveryRequest createLateDeliveryRequest) {
+		
+		this.posService.payments(createLateDeliveryRequest.getCreateCreditCardRequest().getCardOwnerName(), createLateDeliveryRequest.getCreateCreditCardRequest().getCardNumber(), createLateDeliveryRequest.getCreateCreditCardRequest().getCardCvvNumber());
+		runLateDeliveriesPaymentProcess(createLateDeliveryRequest);	
+	}
+	
 	@Override
 	public Result delete(DeletePaymentRequest deletePaymentRequest) {
-
+		
 		checkIfPaymentExists(deletePaymentRequest.getId());
 
 		this.paymentDao.deleteById(deletePaymentRequest.getId());
@@ -102,93 +103,102 @@ public class PaymentManager implements PaymentService {
 		return new SuccessResult(Messages.PAYMENT_DELETE);
 	}
 
-	private Payment checkIfPaymentExists(int id) {
-
-		Payment payment = this.paymentDao.getPaymentById(id);
-
-		if (payment == null) {
-			throw new BusinessException(Messages.PAYMENT_ADD);
-		}
-		return payment;
-	}
-
 	@Override
-	public void createForLateDelivery(CreateLateDeliveryRequest createLateDeliveryRequest) {
+	public DataResult<ListPaymentDto> getById(int paymentId) {
 
-		this.posService.payments(createLateDeliveryRequest.getCreateCreditCardRequest().getCardOwnerName(),
-				createLateDeliveryRequest.getCreateCreditCardRequest().getCardNumber(),
-				createLateDeliveryRequest.getCreateCreditCardRequest().getCardCvvNumber());
-		runLateDeliveriesPaymentProcess(createLateDeliveryRequest);
+		Payment result = checkIfPaymentExists(paymentId);
+
+		ListPaymentDto response = this.modelMapperService.forDto().map(result, ListPaymentDto.class);
+
+		return new SuccessDataResult<ListPaymentDto>(response, Messages.SUCCESS);
 	}
 
-	private Invoice saveInvoice(Rental rental) {
-
-		CreateInvoiceRequest createInvoiceRequest = new CreateInvoiceRequest();
-
-		createInvoiceRequest.setInvoiceNumber(RandomString.make(10));
-		createInvoiceRequest.setCustomerId(rental.getCustomer().getId());
-		createInvoiceRequest.setRentalId(rental.getId());
-
-		if (this.customerService.checkCustomerIfForRental(rental.getCustomer().getId())) {
-			this.invoiceService.createForCustomer(createInvoiceRequest);
-		}
-		throw new BusinessException(Messages.CUSTOMER_NOT_FOUND);
+	@Transactional
+	private void runPaymentProcess(boolean registered, CreatePaymentRequest createPaymentRequest) {
+		
+		Rental rental = saveRental(createPaymentRequest);
+	
+		saveOrderedAdditionalService(createPaymentRequest.getAdditionalServiceId(), rental.getId());
+		
+		saveCreditCard(registered, createPaymentRequest.getCreateCreditCardRequest());
+		
+		Invoice invoice = saveInvoiceByCustomerType(rental);
+		
+		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
+		savePayment(payment, rental, invoice);
 	}
 	
+	@Transactional
+	private void runLateDeliveriesPaymentProcess(CreateLateDeliveryRequest createLateDeliveryRequest) {
+		
+		Rental rental = getByRental(createLateDeliveryRequest);
+		
+		Invoice invoice = saveInvoiceByCustomerType(rental);
+		
+		Payment payment = this.modelMapperService.forRequest().map(createLateDeliveryRequest, Payment.class);
+		savePayment(payment, rental, invoice);
+	}
+
+	private Rental getByRental(CreateLateDeliveryRequest createLateDeliveryRequest) {
+		
+		ListRentalDto listRentalDto =this.rentalService.getById(createLateDeliveryRequest.getRentalId()).getData();
+		
+		return this.modelMapperService.forRequest().map(listRentalDto, Rental.class);
+		
+	}
 	private Rental saveRental(CreatePaymentRequest createPaymentRequest) {
 		
-		if(this.customerService.checkCustomerIfForRental(createPaymentRequest.getRental().getCustomerId())) {
-			return this.rentalService.createForCustomer(createPaymentRequest.getRental());
+		if(this.customerService.checkCustomerIfForRental(createPaymentRequest.getCreateRentalRequest().getCustomerId())) {
+			return this.rentalService.createForCustomer(createPaymentRequest.getCreateRentalRequest());
 		}
 		throw new BusinessException(Messages.CUSTOMER_NOT_FOUND);		
 	}
 	
-	private void saveCreditCard(boolean registered, CreateCreditCardRequest creditCard) {
+	private void saveOrderedAdditionalService(List<Integer> additionalServiceId, int rentalId) {
+		
+		this.orderedAdditionalServiceService.create(additionalServiceId, rentalId);
+	}
+	
+	private void saveCreditCard(boolean registered, CreateCreditCardRequest createCreditCardRequest) {
 		
 		if(registered) {
-			creditCardService.create(creditCard);
+			creditCardService.create(createCreditCardRequest);
 		}
 	}
+	
+	private Invoice saveInvoiceByCustomerType(Rental rental) {
+		
+		CreateInvoiceRequest createInvoiceRequest = new CreateInvoiceRequest();
+		createInvoiceRequest.setInvoiceNumber(RandomString.make(10));
+		createInvoiceRequest.setCustomerId(rental.getCustomer().getId());
+		createInvoiceRequest.setRentalId(rental.getId());
+		
+		if(this.customerService.checkCustomerIfForRental(rental.getCustomer().getId())) {
+			return this.invoiceService.createForCustomer(createInvoiceRequest);
+		}
+		throw new BusinessException(Messages.CUSTOMER_NOT_FOUND);
+	}
 
-	private void savePayment(Payment payment, Rental rentalCar, Invoice invoice) {
-
-		payment.setId(0);
-		payment.setCustomerId(rentalCar.getCustomer().getId());
+	private void savePayment(Payment payment, Rental rental, Invoice invoice) {
+		
+		payment.setCustomerId(rental.getCustomer().getId());
 		payment.setInvoiceId(invoice.getId());
 		payment.setPaymentTotal(invoice.getRentTotalPrice());
 		payment.setPaymentDate(LocalDate.now());
-		payment.setRentalId(rentalCar.getId());
+		payment.setRentalId(rental.getId());
+		payment.setId(0);
 
 		this.paymentDao.save(payment);
 	}
 
-	private Rental getByRental(CreateLateDeliveryRequest createLateDeliveryRequest) {
+	private Payment checkIfPaymentExists(int paymentId) {
 
-		ListRentalDto listRentalDto = this.rentalService.getById(createLateDeliveryRequest.getRentalId()).getData();
+		Payment payment = this.paymentDao.getById(paymentId);
 
-		return this.modelMapperService.forRequest().map(listRentalDto, Rental.class);
-	}
-
-	private void runPaymentProcess(boolean registered,CreatePaymentRequest createPaymentRequest) {
-		
-		Rental rental = saveRental(createPaymentRequest);
-		
-		saveCreditCard(registered, createPaymentRequest.getCreateCreditCard());
-
-		Invoice invoice = saveInvoice(rental);
-
-		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
-		savePayment(payment, rental, invoice);
-	}
-
-	private void runLateDeliveriesPaymentProcess(CreateLateDeliveryRequest createLateDeliveryRequest) {
-
-		Rental rental = getByRental(createLateDeliveryRequest);
-
-		Invoice invoice = saveInvoice(rental);
-
-		Payment payment = this.modelMapperService.forRequest().map(createLateDeliveryRequest, Payment.class);
-		savePayment(payment, rental, invoice);
+		if (payment == null) {
+			throw new BusinessException(Messages.PAYMENT_NOT_FOUND);
+		}
+		return payment;
 	}
 
 }

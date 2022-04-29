@@ -39,7 +39,7 @@ public class CarDamageManager implements CarDamageService {
 	@Override
 	public DataResult<List<ListCarDamageDto>> getAll() {
 
-		var result = this.carDamageDao.findAll();
+		List<CarDamage> result = this.carDamageDao.findAll();
 		
 		List<ListCarDamageDto> response = result.stream().map(carDamage ->this.modelMapperService.forDto()
 				.map(carDamage, ListCarDamageDto.class)).collect(Collectors.toList());

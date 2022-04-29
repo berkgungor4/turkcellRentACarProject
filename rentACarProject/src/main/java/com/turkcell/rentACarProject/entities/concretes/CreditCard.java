@@ -30,5 +30,6 @@ public class CreditCard {
 	private String cardNumber;
 	
 	@Column(name="card_cvv_number")
-	private int cardCvvNumber;
+	private String cardCvvNumber;
+	
 }

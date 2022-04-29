@@ -37,7 +37,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	@Override
 	public DataResult<List<ListIndividualCustomerDto>> getAll() {
 		
-		var result = this.individualCustomerDao.findAll();
+		List<IndividualCustomer> result = this.individualCustomerDao.findAll();
 		
 		List<ListIndividualCustomerDto> response = result.stream()
 				.map(customer -> this.modelMapperService.forDto().map(customer, ListIndividualCustomerDto.class))

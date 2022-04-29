@@ -35,7 +35,7 @@ public class ColorManager implements ColorService {
 
 	@Override
 	public DataResult<List<ListColorDto>> getAll() {
-		var result = this.colorDao.findAll();
+		List<Color> result = this.colorDao.findAll();
 		List<ListColorDto> response = result.stream()
 				.map(color -> this.modelMapperService.forDto().map(color, ListColorDto.class))
 				.collect(Collectors.toList());

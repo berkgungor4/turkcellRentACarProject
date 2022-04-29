@@ -9,7 +9,7 @@ import com.turkcell.rentACarProject.business.outServices.FakeIsBank;
 public class FakeIsBankAdapter implements PosService {
 	
 	@Override
-	public boolean payments(String cardOwnerName, String cardNumber, int cardCvvNumber) {
+	public boolean payments(String cardOwnerName, String cardNumber, String cardCvvNumber) {
 		
 		FakeIsBank fakeIsBank = new FakeIsBank();
 		

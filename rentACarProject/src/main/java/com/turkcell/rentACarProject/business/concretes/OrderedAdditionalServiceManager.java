@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.rentACarProject.business.abstracts.AdditionalServiceService;
@@ -36,10 +37,10 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	private AdditionalServiceService additionalServiceService;
 
 	@Autowired
+	@Lazy
 	public OrderedAdditionalServiceManager(OrderedAdditionalServiceDao orderedAdditionalServiceDao,
 			ModelMapperService modelMapperService, RentalService rentalService,
 			AdditionalServiceService additionalServiceService) {
-		super();
 		this.orderedAdditionalServiceDao = orderedAdditionalServiceDao;
 		this.modelMapperService = modelMapperService;
 		this.rentalService = rentalService;
@@ -95,18 +96,26 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 
 	@Override
-	public Result create(CreateOrderedAdditionalServiceRequest createOrderedAdditionalServiceRequest) {
+	public void create(List<Integer> additionalServiceId, int rentalId){
+		
+		for (Integer id : additionalServiceId) {
+			checkIfAdditionalServiceExists(id);
+		}
+		
+		checkIfRentalExists(rentalId);
+		
+		for (int additionalService : additionalServiceId) {
+			
+			CreateOrderedAdditionalServiceRequest createOrderedAdditionalServiceRequest = new CreateOrderedAdditionalServiceRequest();
+			createOrderedAdditionalServiceRequest.setAdditionalServiceId(additionalService);
+			createOrderedAdditionalServiceRequest.setRentalId(rentalId);
+			
+			OrderedAdditionalService orderedAdditionalService = this.modelMapperService.forDto().map(createOrderedAdditionalServiceRequest, OrderedAdditionalService.class);
+			orderedAdditionalService.setId(0);		
 
-		OrderedAdditionalService orderedAdditionalService = this.modelMapperService.forRequest()
-				.map(createOrderedAdditionalServiceRequest, OrderedAdditionalService.class);
+			this.orderedAdditionalServiceDao.save(orderedAdditionalService);
+		}
 
-		orderedAdditionalService.setId(0);
-
-		checkIfAdditionalServiceExists(createOrderedAdditionalServiceRequest.getAdditionalServiceId());
-
-		this.orderedAdditionalServiceDao.save(orderedAdditionalService);
-
-		return new SuccessResult(Messages.ORDERED_ADDITIONAL_SERVICE_ADD);
 	}
 
 	@Override

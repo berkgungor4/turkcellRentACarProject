@@ -35,5 +35,5 @@ public class AdditionalService {
 	private double dailyPrice;
 	
 	@OneToMany(mappedBy = "additionalService")
-	private List<OrderedAdditionalService> additionalService;
+	private List<OrderedAdditionalService> orderedAdditionalService;
 }

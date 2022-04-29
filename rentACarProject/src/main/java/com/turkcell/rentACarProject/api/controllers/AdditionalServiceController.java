@@ -36,7 +36,7 @@ public class AdditionalServiceController {
 		return this.additionalServiceService.getAll();
 	}
 	
-	@GetMapping("/findById")
+	@GetMapping("/getById")
 	public DataResult<ListAdditionalServiceDto> getById(@RequestParam int id){
 		return this.additionalServiceService.getById(id);
 	}

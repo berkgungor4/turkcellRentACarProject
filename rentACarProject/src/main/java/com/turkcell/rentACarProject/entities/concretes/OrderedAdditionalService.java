@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="additional_services")
+@Table(name="ordered_additional_services")
 public class OrderedAdditionalService {
 
 	@Id

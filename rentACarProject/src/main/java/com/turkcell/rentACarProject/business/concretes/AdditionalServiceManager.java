@@ -38,7 +38,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	@Override
 	public DataResult<List<ListAdditionalServiceDto>> getAll() {
 
-		var result = this.additionalServiceDao.findAll();
+		List<AdditionalService> result = this.additionalServiceDao.findAll();
 		List<ListAdditionalServiceDto> response = result.stream().map(additionalService -> this.modelMapperService
 				.forDto().map(additionalService, ListAdditionalServiceDto.class)).collect(Collectors.toList());
 
@@ -76,7 +76,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 		AdditionalService additionalService = this.additionalServiceDao
 				.getAdditionalServiceById(updateAdditionalServiceRequest.getId());
-
+		
 		this.additionalServiceDao.save(additionalService);
 
 		return new SuccessResult(Messages.ADDITIONAL_SERVICE_UPDATE);
@@ -92,12 +92,14 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		return new SuccessResult(Messages.ADDITIONAL_SERVICE_DELETE);
 	}
 
-	private void checkIfAdditionalServiceExists(int id) {
+	private AdditionalService checkIfAdditionalServiceExists(int id) {
 
-		if (!this.additionalServiceDao.existsById(id)) {
-			
-			throw new BusinessException(Messages.ADDITIONAL_SERVICE_ADD);
+		AdditionalService additionalService = this.additionalServiceDao.getAdditionalServiceById(id);
+		
+		if ( additionalService == null) {
+			throw new BusinessException(Messages.ADDITIONAL_SERVICE_NOT_FOUND);
 		}
+		return additionalService;
 	}
 
 }

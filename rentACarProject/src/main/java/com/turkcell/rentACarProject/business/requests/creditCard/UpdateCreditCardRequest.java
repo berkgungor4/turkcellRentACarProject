@@ -12,5 +12,5 @@ public class UpdateCreditCardRequest {
 	private int id;
 	private String cardOwnerName;
 	private String cardNumber;
-	private int cardCvvNumber;
+	private String cardCvvNumber;
 }

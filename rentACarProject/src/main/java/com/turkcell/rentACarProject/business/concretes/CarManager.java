@@ -38,7 +38,7 @@ public class CarManager implements CarService {
 
 	@Override
 	public DataResult<List<ListCarDto>> getAll() {
-		var result = this.carDao.findAll();
+		List<Car> result = this.carDao.findAll();
 		List<ListCarDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, ListCarDto.class)).collect(Collectors.toList());
 

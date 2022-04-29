@@ -9,6 +9,7 @@ import com.turkcell.rentACarProject.business.requests.invoice.DeleteInvoiceReque
 import com.turkcell.rentACarProject.business.requests.invoice.UpdateInvoiceRequest;
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
+import com.turkcell.rentACarProject.entities.concretes.Invoice;
 
 public interface InvoiceService {
 	
@@ -18,7 +19,7 @@ public interface InvoiceService {
 	DataResult<List<ListInvoiceDto>> getInvoiceByCustomer(int customerId);
 	DataResult<List<ListInvoiceDto>> getInvoiceByRental(int rentalId);
 	
-	Result createForCustomer(CreateInvoiceRequest createInvoiceRequest);
+	Invoice createForCustomer(CreateInvoiceRequest createInvoiceRequest);
 	Result update(UpdateInvoiceRequest updateInvoiceRequest);
 	Result delete(DeleteInvoiceRequest deleteInvoiceRequest);
 }
