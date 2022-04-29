@@ -39,6 +39,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	public DataResult<List<ListAdditionalServiceDto>> getAll() {
 
 		List<AdditionalService> result = this.additionalServiceDao.findAll();
+		
 		List<ListAdditionalServiceDto> response = result.stream().map(additionalService -> this.modelMapperService
 				.forDto().map(additionalService, ListAdditionalServiceDto.class)).collect(Collectors.toList());
 
