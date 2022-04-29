@@ -65,7 +65,7 @@ public class PaymentManager implements PaymentService {
 	@Override
 	public DataResult<List<ListPaymentDto>> getAll() {
 
-		var result = this.paymentDao.findAll();
+		List<ListPaymentDto> result = this.paymentDao.findAll();
 
 		List<ListPaymentDto> response = result.stream()
 				.map(payment -> this.modelMapperService.forDto().map(payment, ListPaymentDto.class))
