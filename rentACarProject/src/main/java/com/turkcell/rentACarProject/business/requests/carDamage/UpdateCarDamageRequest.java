@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCarDamageRequest {
-	
+
 	private int id;
-	private String description; 
+	private String description;
 }

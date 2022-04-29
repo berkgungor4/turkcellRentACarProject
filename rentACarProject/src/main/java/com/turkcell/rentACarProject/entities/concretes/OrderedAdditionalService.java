@@ -17,20 +17,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="ordered_additional_services")
+@Table(name = "ordered_additional_services")
 public class OrderedAdditionalService {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id") 	
+	@Column(name = "id")
 	private int id;
-	
-	@ManyToOne
-	@JoinColumn(name = "additional_service_id") 
-	private AdditionalService additionalService;	
-	
-	@ManyToOne
-	@JoinColumn(name = "rental_id")  
-	private Rental rental; 
 
+	@ManyToOne
+	@JoinColumn(name = "additional_service_id")
+	private AdditionalService additionalService;
+
+	@ManyToOne
+	@JoinColumn(name = "rental_id")
+	private Rental rental;
 }

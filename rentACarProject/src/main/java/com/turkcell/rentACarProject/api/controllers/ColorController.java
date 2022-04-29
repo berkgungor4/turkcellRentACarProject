@@ -22,38 +22,38 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/colors")
-
 public class ColorController {
-	
+
 	private ColorService colorService;
-	
+
 	@Autowired
 	public ColorController(ColorService colorService) {
 		this.colorService = colorService;
 	}
-	
+
 	@GetMapping("/getAll")
-	public DataResult<List<ListColorDto>> getAll(){
+	public DataResult<List<ListColorDto>> getAll() {
 		return this.colorService.getAll();
 	}
-	
+
 	@PostMapping("/create")
 	public Result add(@RequestBody CreateColorRequest createColorRequest) {
 		return this.colorService.create(createColorRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestBody DeleteColorRequest deleteColorRequest) {
 		return this.colorService.delete(deleteColorRequest);
 	}
-	
+
 	@PutMapping("/update")
 	public Result update(@RequestBody UpdateColorRequest updateColorRequest) {
 		return this.colorService.update(updateColorRequest);
 	}
-	
+
 	@GetMapping("/getById")
 	public DataResult<ListColorDto> getById(@RequestParam int id) {
 		return this.colorService.getById(id);
 	}
+
 }

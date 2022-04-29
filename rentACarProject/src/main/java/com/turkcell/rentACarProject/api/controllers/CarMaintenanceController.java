@@ -23,42 +23,42 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/carMaintenances")
 public class CarMaintenanceController {
-	
 
 	private CarMaintenanceService carMaintenanceService;
-	
+
 	@Autowired
 	public CarMaintenanceController(CarMaintenanceService carMaintenanceService) {
 		this.carMaintenanceService = carMaintenanceService;
 	}
-	
+
 	@GetMapping("/getAll")
 	public DataResult<List<ListCarMaintenanceDto>> getAll() {
 		return this.carMaintenanceService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
 	DataResult<ListCarMaintenanceDto> getById(@RequestParam int id) {
 		return this.carMaintenanceService.getById(id);
 	}
-	
+
 	@GetMapping("/getAllByCarId")
 	public DataResult<List<ListCarMaintenanceDto>> getByCarId(@RequestParam int carId) {
 		return this.carMaintenanceService.getCarMaintenanceByCar(carId);
 	}
-	
+
 	@PostMapping("/create")
 	public Result add(@RequestBody CreateCarMaintenanceRequest createCarMaintenanceRequest) {
 		return this.carMaintenanceService.create(createCarMaintenanceRequest);
 	}
-	
+
 	@PutMapping("/update")
 	public Result update(@RequestBody UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
 		return this.carMaintenanceService.update(updateCarMaintenanceRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestBody DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) {
 		return this.carMaintenanceService.delete(deleteCarMaintenanceRequest);
 	}
+	
 }

@@ -10,11 +10,14 @@ import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 
 public interface PaymentService {
-	
+
 	DataResult<List<ListPaymentDto>> getAll();
+
 	DataResult<ListPaymentDto> getById(int id);
+
 	void createForLateDelivery(CreateLateDeliveryRequest createLateDeliveryRequest);
 
 	Result create(boolean registered, CreatePaymentRequest createPaymentRequest);
+
 	Result delete(DeletePaymentRequest deletePaymentRequest);
 }

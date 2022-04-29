@@ -23,34 +23,34 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/individualCustomers")
 public class IndividualCustomerController {
-	
+
 	private IndividualCustomerService individualCustomerService;
-	
+
 	@Autowired
 	public IndividualCustomerController(IndividualCustomerService customerService) {
 		this.individualCustomerService = customerService;
 	}
-	
+
 	@GetMapping("/getAll")
 	DataResult<List<ListIndividualCustomerDto>> getAll() {
 		return this.individualCustomerService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
 	DataResult<ListIndividualCustomerDto> getById(@RequestParam int id) {
 		return this.individualCustomerService.getById(id);
 	}
-	
+
 	@PostMapping("/create")
 	Result create(@RequestBody CreateIndividualCustomerRequest createIndividualCustomerRequest) {
 		return this.individualCustomerService.create(createIndividualCustomerRequest);
 	}
-	
+
 	@PutMapping("/update")
 	Result update(@RequestBody UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
 		return this.individualCustomerService.update(updateIndividualCustomerRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	Result delete(@RequestBody DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) {
 		return this.individualCustomerService.delete(deleteIndividualCustomerRequest);

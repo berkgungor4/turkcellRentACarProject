@@ -29,15 +29,17 @@ import com.turkcell.rentACarProject.dataAccess.abstracts.InvoiceDao;
 import com.turkcell.rentACarProject.entities.concretes.Invoice;
 
 @Service
-public class InvoiceManager implements InvoiceService{
-	
+public class InvoiceManager implements InvoiceService {
+
 	private InvoiceDao invoiceDao;
 	private ModelMapperService modelMapperService;
 	private AdditionalServiceService additionalServiceService;
 	private OrderedAdditionalServiceService orderedAdditionalServiceService;
 
 	@Autowired
-	public InvoiceManager(InvoiceDao invoiceDao, ModelMapperService modelMapperService, CustomerService customerService, AdditionalServiceService additionalServiceService, OrderedAdditionalServiceService orderedAdditionalServiceService) {
+	public InvoiceManager(InvoiceDao invoiceDao, ModelMapperService modelMapperService, CustomerService customerService,
+			AdditionalServiceService additionalServiceService,
+			OrderedAdditionalServiceService orderedAdditionalServiceService) {
 		this.invoiceDao = invoiceDao;
 		this.modelMapperService = modelMapperService;
 		this.additionalServiceService = additionalServiceService;
@@ -46,83 +48,90 @@ public class InvoiceManager implements InvoiceService{
 
 	@Override
 	public DataResult<List<ListInvoiceDto>> getAll() {
-		
+
 		List<Invoice> result = this.invoiceDao.findAll();
+		
 		List<ListInvoiceDto> response = result.stream()
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, ListInvoiceDto.class))
 				.collect(Collectors.toList());
+		
 		return new SuccessDataResult<List<ListInvoiceDto>>(response, Messages.SUCCESS);
 	}
-	
+
 	@Override
 	public DataResult<ListInvoiceDto> getById(int id) {
-		
+
 		Invoice result = checkIfInvoiceExists(id);
-		
+
 		ListInvoiceDto response = this.modelMapperService.forDto().map(result, ListInvoiceDto.class);
-		
+
 		return new SuccessDataResult<ListInvoiceDto>(response, Messages.SUCCESS);
 	}
-	
+
 	@Override
 	public DataResult<List<ListInvoiceDto>> getByDateOfBetween(LocalDate creationDate, LocalDate returnDate) {
-		
+
 		List<Invoice> result = this.invoiceDao.findByCreationDateBetween(creationDate, returnDate);
+		
 		List<ListInvoiceDto> response = result.stream()
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, ListInvoiceDto.class))
 				.collect(Collectors.toList());
-		
+
 		return new SuccessDataResult<List<ListInvoiceDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public DataResult<List<ListInvoiceDto>> getInvoiceByCustomer(int customerId) {
-		
+
 		List<Invoice> result = this.invoiceDao.getByCustomer_id(customerId);
+		
 		List<ListInvoiceDto> response = result.stream()
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, ListInvoiceDto.class))
 				.collect(Collectors.toList());
-		
+
 		return new SuccessDataResult<List<ListInvoiceDto>>(response, Messages.SUCCESS);
 	}
-	
+
 	@Override
 	public DataResult<List<ListInvoiceDto>> getInvoiceByRental(int rentalId) {
-		
+
 		List<Invoice> result = this.invoiceDao.getByRental_id(rentalId);
+		
 		List<ListInvoiceDto> response = result.stream()
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, ListInvoiceDto.class))
 				.collect(Collectors.toList());
-		
+
 		return new SuccessDataResult<List<ListInvoiceDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public Invoice createForCustomer(CreateInvoiceRequest createInvoiceRequest) {
-		
+
 		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
-		
+
 		invoice.setId(0);
 
 		invoiceTableSetColumns(invoice, createInvoiceRequest);
-		
+
 		this.invoiceDao.save(invoice);
-		
+
 		return invoice;
 	}
 
 	@Override
 	public Result delete(DeleteInvoiceRequest deleteInvoiceRequest) {
-		
+
 		checkIfInvoiceExists(deleteInvoiceRequest.getId());
+		
 		Invoice invoice = this.modelMapperService.forRequest().map(deleteInvoiceRequest, Invoice.class);
 		this.invoiceDao.delete(invoice);
+		
 		return new SuccessResult(Messages.INVOICE_DELETE);
 	}
 
 	@Override
 	public Result update(UpdateInvoiceRequest updateInvoiceRequest) {
-		
+
 		checkIfInvoiceExists(updateInvoiceRequest.getId());
 
 		Invoice invoice = this.invoiceDao.getInvoiceById(updateInvoiceRequest.getId());
@@ -131,20 +140,20 @@ public class InvoiceManager implements InvoiceService{
 
 		return new SuccessResult(Messages.INVOICE_UPDATE);
 	}
-	
+
 	private Invoice checkIfInvoiceExists(int id) {
-		
-		Invoice invoice =this.invoiceDao.getInvoiceById(id);
-		
-		if(invoice==null) {
+
+		Invoice invoice = this.invoiceDao.getInvoiceById(id);
+
+		if (invoice == null) {
 			throw new BusinessException(Messages.INVOICE_NOT_FOUND);
 		}
-		
+
 		return invoice;
 	}
-	
+
 	private void invoiceTableSetColumns(Invoice invoice, CreateInvoiceRequest createInvoiceRequest) {
-		
+
 		invoice.setCreationDate(LocalDate.now());
 		invoice.setRentDate(invoice.getRental().getRentDate());
 		invoice.setReturnDate(invoice.getRental().getReturnDate());
@@ -153,29 +162,31 @@ public class InvoiceManager implements InvoiceService{
 	}
 
 	private int dateBetweenCalculator(Invoice invoice) {
-		
+
 		Long dateBetween = ChronoUnit.DAYS.between(invoice.getRentDate(), invoice.getReturnDate());
-		int numberDays=dateBetween.intValue()+1;
-		
+		int numberDays = dateBetween.intValue() + 1;
+
 		return numberDays;
 	}
 
 	private double totalPriceCalculator(Invoice invoice) {
-		
+
 		double rentPrice = invoice.getRental().getTotalPrice();
 		int numberDays = invoice.getNumberOfDaysRented();
-		
-		double additionalServiceDailyPrice=0;
-		List<ListOrderedAdditionalServiceDto> listOrderedAdditionalServiceDto = this.orderedAdditionalServiceService.getOrderedAdditionalServiceByRental(invoice.getRental().getId()).getData();
-		
-		for (int i = 0; i < listOrderedAdditionalServiceDto.size(); i++) {	
 
-			ListAdditionalServiceDto additionalService = this.additionalServiceService.getById(listOrderedAdditionalServiceDto.get(i).getAdditionalServiceId()).getData();
-			additionalServiceDailyPrice+=additionalService.getDailyPrice();	
+		double additionalServiceDailyPrice = 0;
+		List<ListOrderedAdditionalServiceDto> listOrderedAdditionalServiceDto = this.orderedAdditionalServiceService
+				.getOrderedAdditionalServiceByRental(invoice.getRental().getId()).getData();
+
+		for (int i = 0; i < listOrderedAdditionalServiceDto.size(); i++) {
+
+			ListAdditionalServiceDto additionalService = this.additionalServiceService
+					.getById(listOrderedAdditionalServiceDto.get(i).getAdditionalServiceId()).getData();
+			additionalServiceDailyPrice += additionalService.getDailyPrice();
 		}
-		double additionalServicePrice = additionalServiceDailyPrice*numberDays;
-		
-		return additionalServicePrice+rentPrice;
+		double additionalServicePrice = additionalServiceDailyPrice * numberDays;
+
+		return additionalServicePrice + rentPrice;
 	}
 
 }

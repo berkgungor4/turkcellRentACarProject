@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePaymentRequest {
-	
+
 	private List<Integer> additionalServiceId;
 	private CreateRentalRequest createRentalRequest;
-	
+
 	@NotNull
 	private CreateCreditCardRequest createCreditCardRequest;
 }

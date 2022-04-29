@@ -17,10 +17,10 @@ import com.turkcell.rentACarProject.entities.concretes.CreditCard;
 
 @Service
 public class CreditCardManager implements CreditCardService {
-	
+
 	private CreditCardDao creditCardDao;
 	private ModelMapperService modelMapperService;
-	
+
 	@Autowired
 	public CreditCardManager(CreditCardDao creditCardDao, ModelMapperService modelMapperService) {
 		this.creditCardDao = creditCardDao;
@@ -29,40 +29,43 @@ public class CreditCardManager implements CreditCardService {
 
 	@Override
 	public Result create(CreateCreditCardRequest createCreditCardRequest) {
-		
+
 		checkIfCardExists(createCreditCardRequest.getCardNumber());
-		
+
 		CreditCard creditCard = this.modelMapperService.forRequest().map(createCreditCardRequest, CreditCard.class);
-		
+
 		creditCard.setId(0);
-		
+
 		this.creditCardDao.save(creditCard);
-		
+
 		return new SuccessResult(Messages.CREDIT_CARD_ADD);
 	}
 
 	@Override
 	public Result update(UpdateCreditCardRequest updateCreditCardRequest) {
-		
+
 		CreditCard creditCard = this.modelMapperService.forRequest().map(updateCreditCardRequest, CreditCard.class);
 		this.creditCardDao.save(creditCard);
+		
 		return new SuccessResult(Messages.CREDIT_CARD_UPDATE);
 	}
 
 	@Override
 	public Result delete(DeleteCreditCardRequest deleteCreditCardRequest) {
-		
+
 		CreditCard creditCard = this.modelMapperService.forRequest().map(deleteCreditCardRequest, CreditCard.class);
 		this.creditCardDao.delete(creditCard);
+		
 		return new SuccessResult(Messages.CREDIT_CARD_DELETE);
 	}
-	
+
 	private boolean checkIfCardExists(String cardNumber) {
 
 		if (this.creditCardDao.existsByCardNumber(cardNumber)) {
 			throw new BusinessException(Messages.CREDIT_CARD_EXISTS);
 		}
+		
 		return true;
 	}
-	
+
 }

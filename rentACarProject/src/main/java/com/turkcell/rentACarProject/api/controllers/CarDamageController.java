@@ -25,40 +25,40 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 public class CarDamageController {
 
 	private CarDamageService carDamageService;
-	
+
 	@Autowired
 	public CarDamageController(CarDamageService carDamageService) {
 		this.carDamageService = carDamageService;
 	}
-	
+
 	@GetMapping("/getAll")
 	public DataResult<List<ListCarDamageDto>> getAll() {
 		return this.carDamageService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
 	DataResult<ListCarDamageDto> getById(@RequestParam int id) {
 		return this.carDamageService.getById(id);
 	}
-	
+
 	@GetMapping("/getAllByCarId")
 	public DataResult<List<ListCarDamageDto>> getAllByCarId(@RequestParam int id) {
 		return this.carDamageService.getCarDamageByCar(id);
 	}
-	
+
 	@PostMapping("/create")
-	public Result add(@RequestBody CreateCarDamageRequest createCarDamageRequest){
+	public Result add(@RequestBody CreateCarDamageRequest createCarDamageRequest) {
 		return this.carDamageService.create(createCarDamageRequest);
 	}
-	
+
 	@PutMapping("/update")
 	public Result update(@RequestBody UpdateCarDamageRequest updateCarDamageRequest) {
 		return this.carDamageService.update(updateCarDamageRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestBody DeleteCarDamageRequest deleteCarDamageRequest) {
 		return this.carDamageService.delete(deleteCarDamageRequest);
 	}
-	
+
 }

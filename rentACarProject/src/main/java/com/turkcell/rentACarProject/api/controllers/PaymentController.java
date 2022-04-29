@@ -31,25 +31,25 @@ public class PaymentController {
 	public PaymentController(PaymentService paymentService) {
 		this.paymentService = paymentService;
 	}
-	
+
 	@GetMapping("/getAll")
-	DataResult<List<ListPaymentDto>> getAll(){
+	DataResult<List<ListPaymentDto>> getAll() {
 		return this.paymentService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
-	DataResult<ListPaymentDto> getById(@RequestParam int id){
+	DataResult<ListPaymentDto> getById(@RequestParam int id) {
 		return this.paymentService.getById(id);
 	}
-	
+
 	@PostMapping("/create")
 	Result create(boolean registered, @RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
 		return this.paymentService.create(registered, createPaymentRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
-	Result delete(@RequestBody DeletePaymentRequest deletePaymentRequest){
+	Result delete(@RequestBody DeletePaymentRequest deletePaymentRequest) {
 		return this.paymentService.delete(deletePaymentRequest);
 	}
-	
+
 }

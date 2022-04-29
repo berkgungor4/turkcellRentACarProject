@@ -20,13 +20,12 @@ import lombok.NoArgsConstructor;
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 public class Customer extends User {
 
-	@Column(name="id", insertable= false, updatable = false)
+	@Column(name = "id", insertable = false, updatable = false)
 	private int id;
-	
+
 	@OneToMany(mappedBy = "customer")
-    private List<Rental> rentals;
-	
+	private List<Rental> rentals;
+
 	@OneToMany(mappedBy = "customer")
 	private List<Invoice> invoices;
-	
 }

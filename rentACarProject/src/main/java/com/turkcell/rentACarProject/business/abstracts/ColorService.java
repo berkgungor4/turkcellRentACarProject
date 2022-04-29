@@ -12,9 +12,12 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 public interface ColorService {
 
 	DataResult<List<ListColorDto>> getAll();
+
 	DataResult<ListColorDto> getById(int id);
-	
+
 	Result create(CreateColorRequest createColorRequest);
+
 	Result update(UpdateColorRequest updateColorRequest);
+
 	Result delete(DeleteColorRequest deleteColorRequest);
 }

@@ -12,9 +12,12 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 public interface BrandService {
 
 	DataResult<List<ListBrandDto>> getAll();
+
 	DataResult<ListBrandDto> getById(int id);
-	
+
 	Result create(CreateBrandRequest createBrandRequest);
+
 	Result update(UpdateBrandRequest updateBrandRequest);
+
 	Result delete(DeleteBrandRequest deleteBrandRequest);
 }

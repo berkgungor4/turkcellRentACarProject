@@ -15,21 +15,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="credit_cards")
+@Table(name = "credit_cards")
 public class CreditCard {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
-	@Column(name="card_owner_name")
+
+	@Column(name = "card_owner_name")
 	private String cardOwnerName;
-	
-	@Column(name="card_number")
+
+	@Column(name = "card_number")
 	private String cardNumber;
-	
-	@Column(name="card_cvv_number")
+
+	@Column(name = "card_cvv_number")
 	private String cardCvvNumber;
-	
 }

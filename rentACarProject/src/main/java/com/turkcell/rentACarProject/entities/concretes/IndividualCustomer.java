@@ -16,17 +16,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "individual_customers")
 @PrimaryKeyJoinColumn(name = "id")
 public class IndividualCustomer extends Customer {
-	
-	@Column(name= "id", insertable = false, updatable = false)
+
+	@Column(name = "id", insertable = false, updatable = false)
 	private int id;
-	
-	@Column(name="first_name")
+
+	@Column(name = "first_name")
 	private String firstName;
-	
-	@Column(name="last_name")
+
+	@Column(name = "last_name")
 	private String lastName;
-	
-	@Column(name="identity_number")
+
+	@Column(name = "identity_number")
 	private String identityNumber;
-    
 }

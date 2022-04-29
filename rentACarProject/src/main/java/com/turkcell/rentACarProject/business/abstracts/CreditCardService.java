@@ -6,8 +6,10 @@ import com.turkcell.rentACarProject.business.requests.creditCard.UpdateCreditCar
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 
 public interface CreditCardService {
-	
+
 	Result create(CreateCreditCardRequest createCreditCardRequest);
+
 	Result update(UpdateCreditCardRequest updateCreditCardRequest);
+
 	Result delete(DeleteCreditCardRequest deleteCreditCardRequest);
 }

@@ -20,41 +20,40 @@ import com.turkcell.rentACarProject.business.requests.corporateCustomer.UpdateCo
 import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 
-
 @RestController
 @RequestMapping("/api/corporateCustomers")
 public class CorporateCustomerController {
-	
+
 	private CorporateCustomerService corporateCustomerService;
-	
+
 	@Autowired
 	public CorporateCustomerController(CorporateCustomerService corporateCustomerService) {
 		this.corporateCustomerService = corporateCustomerService;
 	}
-	
+
 	@GetMapping("/getAll")
 	DataResult<List<ListCorporateCustomerDto>> getAll() {
 		return this.corporateCustomerService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
 	DataResult<ListCorporateCustomerDto> getById(@RequestParam int id) {
 		return this.corporateCustomerService.getById(id);
 	}
-	
+
 	@PostMapping("/create")
 	Result create(@RequestBody CreateCorporateCustomerRequest createCorporateCustomerRequest) {
 		return this.corporateCustomerService.create(createCorporateCustomerRequest);
 	}
-	
+
 	@PutMapping("/update")
 	Result update(@RequestBody UpdateCorporateCustomerRequest updateCorporateCustomerRequest) {
 		return this.corporateCustomerService.update(updateCorporateCustomerRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	Result delete(@RequestBody DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) {
 		return this.corporateCustomerService.delete(deleteCorporateCustomerRequest);
 	}
-	
+
 }

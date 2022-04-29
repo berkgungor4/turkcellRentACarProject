@@ -22,7 +22,6 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/brands")
-
 public class BrandController {
 
 	private BrandService brandService;
@@ -36,7 +35,7 @@ public class BrandController {
 	public DataResult<List<ListBrandDto>> getAll() {
 		return this.brandService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
 	public DataResult<ListBrandDto> getById(@RequestParam int id) {
 		return this.brandService.getById(id);
@@ -46,15 +45,15 @@ public class BrandController {
 	public Result add(@RequestBody CreateBrandRequest createBrandRequest) {
 		return this.brandService.create(createBrandRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestBody DeleteBrandRequest deleteBrandRequest) {
 		return this.brandService.delete(deleteBrandRequest);
 	}
-	
+
 	@PutMapping("/update")
 	public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) {
 		return this.brandService.update(updateBrandRequest);
 	}
-	
+
 }

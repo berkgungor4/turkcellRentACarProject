@@ -10,11 +10,14 @@ import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 
 public interface AdditionalServiceService {
-	
+
 	DataResult<List<ListAdditionalServiceDto>> getAll();
+
 	DataResult<ListAdditionalServiceDto> getById(int id);
-	
+
 	Result create(CreateAdditionalServiceRequest createAdditionalServiceRequest);
+
 	Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest);
-	Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest) ;
+
+	Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest);
 }

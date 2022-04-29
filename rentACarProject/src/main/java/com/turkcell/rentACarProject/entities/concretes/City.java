@@ -18,21 +18,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="cities")
+@Table(name = "cities")
 public class City {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	@Column(name = "name")
 	private String name;
-	
-	@OneToMany(mappedBy= "initialCity")
+
+	@OneToMany(mappedBy = "initialCity")
 	private List<Rental> initialCity;
-	
-	@OneToMany(mappedBy= "returnCity")
+
+	@OneToMany(mappedBy = "returnCity")
 	private List<Rental> returnCity;
-	
 }

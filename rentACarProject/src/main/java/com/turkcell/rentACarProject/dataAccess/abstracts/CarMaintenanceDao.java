@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.turkcell.rentACarProject.entities.concretes.CarMaintenance;
 
 @Repository
-public interface CarMaintenanceDao extends JpaRepository <CarMaintenance, Integer> {
+public interface CarMaintenanceDao extends JpaRepository<CarMaintenance, Integer> {
 
 	CarMaintenance getCarMaintenanceById(int id);
-	
+
 	List<CarMaintenance> getByCar_id(int id);
 }

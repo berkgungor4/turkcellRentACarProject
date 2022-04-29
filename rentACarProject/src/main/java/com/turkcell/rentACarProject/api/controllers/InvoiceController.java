@@ -28,49 +28,51 @@ import com.turkcell.rentACarProject.entities.concretes.Invoice;
 @RestController
 @RequestMapping("/api/invoices")
 public class InvoiceController {
-	
+
 	private InvoiceService invoiceService;
 
 	@Autowired
 	public InvoiceController(InvoiceService invoiceService) {
 		this.invoiceService = invoiceService;
 	}
-	
+
 	@GetMapping("/getAll")
-	DataResult<List<ListInvoiceDto>> getAll(){
-	return this.invoiceService.getAll();
+	DataResult<List<ListInvoiceDto>> getAll() {
+		return this.invoiceService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
-	DataResult<ListInvoiceDto> getById(@RequestParam int id){
+	DataResult<ListInvoiceDto> getById(@RequestParam int id) {
 		return this.invoiceService.getById(id);
 	}
-	
+
 	@GetMapping("/getByDateOfBetween")
-	DataResult<List<ListInvoiceDto>> getByDateOfBetween (@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate creationDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate returnDate){
+	DataResult<List<ListInvoiceDto>> getByDateOfBetween(
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate creationDate,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate returnDate) {
 		return this.invoiceService.getByDateOfBetween(creationDate, returnDate);
 	}
-	
+
 	@GetMapping("/getInvoiceByCustomer")
 	DataResult<List<ListInvoiceDto>> getInvoiceByCustomer(@RequestParam int customerId) {
 		return this.invoiceService.getInvoiceByCustomer(customerId);
 	}
-	
+
 	@GetMapping("/getInvoiceByRental")
-	DataResult<List<ListInvoiceDto>> getInvoiceByRental(@RequestParam int rentalId){
+	DataResult<List<ListInvoiceDto>> getInvoiceByRental(@RequestParam int rentalId) {
 		return this.invoiceService.getInvoiceByRental(rentalId);
 	}
-	
+
 	@PostMapping("/create")
 	public Invoice createForCustomer(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
 		return this.invoiceService.createForCustomer(createInvoiceRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestBody DeleteInvoiceRequest deleteInvoiceRequest) {
 		return this.invoiceService.delete(deleteInvoiceRequest);
 	}
-	
+
 	@PutMapping("/update")
 	public Result update(@RequestBody UpdateInvoiceRequest updateInvoiceRequest) {
 		return this.invoiceService.update(updateInvoiceRequest);

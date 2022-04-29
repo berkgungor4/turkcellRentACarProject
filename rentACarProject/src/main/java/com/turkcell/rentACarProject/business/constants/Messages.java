@@ -1,7 +1,7 @@
 package com.turkcell.rentACarProject.business.constants;
 
 public class Messages {
-	
+
 	public static final String BUSINESS_EXCEPTION_ERRORS = "BusinessException.Errors";
 	public static final String SUCCESS = "Success";
 	public static final String VALIDATION_ERRORS = "Validation.Errors";
@@ -15,7 +15,7 @@ public class Messages {
 	public static final String BRAND_UPDATE = "Brand.Updated";
 	public static final String BRAND_DELETED = "Brand.Deleted";
 	public static final String BRAND_NOT_FOUND = "Cannot find a brand with this Id";
-	
+
 	public static final String CAR_DAMAGE_ADD = "CarDamage.Added";
 	public static final String CAR_DAMAGE_UPDATE = "CarDamage.Updated";
 	public static final String CAR_DAMAGE_DELETE = "CarDamage.Deleted";
@@ -31,7 +31,7 @@ public class Messages {
 	public static final String CAR_UPDATE = "Car.Updated";
 	public static final String CAR_DELETE = "Car.Deleted";
 	public static final String CAR_NOT_FOUND = "Cannot find a car with this Id";
-	
+
 	public static final String CITY_ADD = "City.Added";
 	public static final String CITY_UPDATE = "City.Updated";
 	public static final String CITY_DELETE = "City.Deleted";
@@ -47,7 +47,7 @@ public class Messages {
 	public static final String CORPORATE_CUSTOMER_UPDATE = "CorporateCustomer.Updated";
 	public static final String CORPORATE_CUSTOMER_DELETE = "CorporateCustomer.Deleted";
 	public static final String CORPORATE_CUSTOMER_NOT_FOUND = "Cannot find a corporate customer with this Id";
-	
+
 	public static final String CREDIT_CARD_ADD = "CreditCard.Added";
 	public static final String CREDIT_CARD_UPDATE = "CreditCard.Updated";
 	public static final String CREDIT_CARD_DELETE = "CreditCard.Deleted";
@@ -64,12 +64,12 @@ public class Messages {
 	public static final String INVOICE_UPDATE = "Invoice.Updated";
 	public static final String INVOICE_DELETE = "Invoice.Deleted";
 	public static final String INVOICE_NOT_FOUND = "Cannot find a invoice with this Id";
-	
+
 	public static final String ORDERED_ADDITIONAL_SERVICE_ADD = "OrderedAdditionalService.Added";
 	public static final String ORDERED_ADDITIONAL_SERVICE_UPDATE = "OrderedAdditionalService.Updated";
 	public static final String ORDERED_ADDITIONAL_SERVICE_DELETE = "OrderedAdditonalService.Deleted";
 	public static final String ORDERED_ADDITIONAL_SERVICE_NOT_FOUND = "Cannot find an ordered additional service with this Id";
-	
+
 	public static final String PAYMENT_ADD = "Payment.Added";
 	public static final String PAYMENT_DELETE = "Payment.Deleted";
 	public static final String PAYMENT_NOT_FOUND = "Cannot find a payment with this Id";
@@ -80,5 +80,4 @@ public class Messages {
 	public static final String RENTAL_NOT_FOUND = "Cannot find a rental with this Id";
 	public static final String RENTAL_IN_MAINTENANCE = "Rental can't be added (Car is under maintenance at requested times)";
 	public static final String RENTAL_RETURN_DATE_ERROR = "Return date can't be earlier than rental date";
-
 }

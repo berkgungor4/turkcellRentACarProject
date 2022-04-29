@@ -7,6 +7,6 @@ import com.turkcell.rentACarProject.entities.concretes.Payment;
 
 @Repository
 public interface PaymentDao extends JpaRepository<Payment, Integer> {
-	
+
 	Payment getPaymentById(int id);
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateCreditCardRequest {
-	
+
 	private String cardOwnerName;
 	private String cardNumber;
 	private String cardCvvNumber;

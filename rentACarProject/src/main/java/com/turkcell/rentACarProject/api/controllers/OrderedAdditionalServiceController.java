@@ -23,37 +23,37 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/orderedAdditionalServices")
 public class OrderedAdditionalServiceController {
-	
+
 	private OrderedAdditionalServiceService orderedAdditionalServiceService;
 
 	@Autowired
 	public OrderedAdditionalServiceController(OrderedAdditionalServiceService orderedAdditionalServiceService) {
 		this.orderedAdditionalServiceService = orderedAdditionalServiceService;
 	}
-	
+
 	@GetMapping("/getAll")
-	DataResult<List<ListOrderedAdditionalServiceDto>> getAll(){
+	DataResult<List<ListOrderedAdditionalServiceDto>> getAll() {
 		return this.orderedAdditionalServiceService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
-	DataResult<ListOrderedAdditionalServiceDto> getById(@RequestParam int id){
+	DataResult<ListOrderedAdditionalServiceDto> getById(@RequestParam int id) {
 		return this.orderedAdditionalServiceService.getById(id);
 	}
-	
+
 	@GetMapping("/findAllByRentalId")
-	DataResult<List<ListOrderedAdditionalServiceDto>> findAllByRentalId(@RequestParam int rentalId){
+	DataResult<List<ListOrderedAdditionalServiceDto>> findAllByRentalId(@RequestParam int rentalId) {
 		return this.orderedAdditionalServiceService.getOrderedAdditionalServiceByRental(rentalId);
 	}
-	
+
 	@PutMapping("/update")
-	Result update(@RequestBody @Valid UpdateOrderedAdditionalServiceRequest updateOrderedAdditionalServiceRequest){
+	Result update(@RequestBody @Valid UpdateOrderedAdditionalServiceRequest updateOrderedAdditionalServiceRequest) {
 		return this.orderedAdditionalServiceService.update(updateOrderedAdditionalServiceRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
-	Result delete(@RequestBody DeleteOrderedAdditionalServiceRequest deleteOrderedAdditionalServiceRequest){
+	Result delete(@RequestBody DeleteOrderedAdditionalServiceRequest deleteOrderedAdditionalServiceRequest) {
 		return this.orderedAdditionalServiceService.delete(deleteOrderedAdditionalServiceRequest);
 	}
-	
+
 }

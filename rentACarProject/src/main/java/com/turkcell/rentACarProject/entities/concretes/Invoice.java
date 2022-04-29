@@ -21,36 +21,35 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "invoices")
 public class Invoice {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	@Column(name = "invoice_number")
 	private String invoiceNumber;
-	
+
 	@Column(name = "creation_date")
 	private LocalDate creationDate;
-	
-	@Column(name= "rent_date")
+
+	@Column(name = "rent_date")
 	private LocalDate rentDate;
-	
-	@Column(name= "return_date")
+
+	@Column(name = "return_date")
 	private LocalDate returnDate;
-	
+
 	@Column(name = "number_of_days_rented")
 	private int numberOfDaysRented;
-	
+
 	@Column(name = "rent_total_price")
 	private double rentTotalPrice;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "rental_id")
 	private Rental rental;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
-	
 }

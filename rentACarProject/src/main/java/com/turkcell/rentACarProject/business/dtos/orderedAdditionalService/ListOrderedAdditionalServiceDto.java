@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListOrderedAdditionalServiceDto {
+	
 	private int id;
 	private int rentalId;
 	private int additionalServiceId;

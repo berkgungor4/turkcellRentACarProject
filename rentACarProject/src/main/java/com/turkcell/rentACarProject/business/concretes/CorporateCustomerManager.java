@@ -26,7 +26,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
 	private CorporateCustomerDao corporateCustomerDao;
 	private ModelMapperService modelMapperService;
-	
+
 	@Autowired
 	public CorporateCustomerManager(CorporateCustomerDao corporateCustomerDao, ModelMapperService modelMapperService) {
 		this.corporateCustomerDao = corporateCustomerDao;
@@ -37,11 +37,10 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	public DataResult<List<ListCorporateCustomerDto>> getAll() {
 
 		List<CorporateCustomer> result = this.corporateCustomerDao.findAll();
-		
-		List<ListCorporateCustomerDto> response = result.stream()
-				.map(corporateCustomer -> this.modelMapperService.forDto().map(corporateCustomer, ListCorporateCustomerDto.class))
-				.collect(Collectors.toList());
-		
+
+		List<ListCorporateCustomerDto> response = result.stream().map(corporateCustomer -> this.modelMapperService
+				.forDto().map(corporateCustomer, ListCorporateCustomerDto.class)).collect(Collectors.toList());
+
 		return new SuccessDataResult<List<ListCorporateCustomerDto>>(response, Messages.SUCCESS);
 	}
 
@@ -49,50 +48,51 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	public DataResult<ListCorporateCustomerDto> getById(int id) {
 
 		checkIfCorporateCustomerExists(id);
-		
+
 		CorporateCustomer result = this.corporateCustomerDao.getById(id);
-		
-		ListCorporateCustomerDto response = this.modelMapperService.forDto().map(result, ListCorporateCustomerDto.class);
-		
+
+		ListCorporateCustomerDto response = this.modelMapperService.forDto().map(result,
+				ListCorporateCustomerDto.class);
+
 		return new SuccessDataResult<ListCorporateCustomerDto>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public Result create(CreateCorporateCustomerRequest createCorporateCustomerRequest) {
-		
-		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(createCorporateCustomerRequest, CorporateCustomer.class);
-		
+
+		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(createCorporateCustomerRequest,
+				CorporateCustomer.class);
 		this.corporateCustomerDao.save(corporateCustomer);
-		
+
 		return new SuccessResult(Messages.CORPORATE_CUSTOMER_ADD);
 	}
 
 	@Override
 	public Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) {
-		
+
 		checkIfCorporateCustomerExists(updateCorporateCustomerRequest.getId());
-		
-		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest()
-				.map(updateCorporateCustomerRequest, CorporateCustomer.class);
-			this.corporateCustomerDao.save(corporateCustomer);
-			 
+
+		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(updateCorporateCustomerRequest,
+				CorporateCustomer.class);
+		this.corporateCustomerDao.save(corporateCustomer);
+
 		return new SuccessResult(Messages.CORPORATE_CUSTOMER_UPDATE);
 	}
 
 	@Override
 	public Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) {
-		
+
 		this.corporateCustomerDao.deleteById(deleteCorporateCustomerRequest.getId());
-		
+
 		return new SuccessResult(Messages.CORPORATE_CUSTOMER_DELETE);
 	}
-	
+
 	private void checkIfCorporateCustomerExists(int id) {
-		
+
 		if (!this.corporateCustomerDao.existsById(id)) {
-			
+
 			throw new BusinessException(Messages.CORPORATE_CUSTOMER_NOT_FOUND);
 		}
 	}
-	
+
 }

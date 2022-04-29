@@ -18,10 +18,10 @@ import com.turkcell.rentACarProject.entities.concretes.Customer;
 
 @Service
 public class CustomerManager implements CustomerService {
-	
+
 	private CustomerDao customerDao;
 	private ModelMapperService modelMapperService;
-	
+
 	@Autowired
 	public CustomerManager(CustomerDao customerDao, ModelMapperService modelMapperService) {
 		this.customerDao = customerDao;
@@ -30,30 +30,36 @@ public class CustomerManager implements CustomerService {
 
 	@Override
 	public DataResult<List<ListCustomerDto>> getAll() {
-		
+
 		List<Customer> result = this.customerDao.findAll();
+		
 		List<ListCustomerDto> response = result.stream()
 				.map(customer -> this.modelMapperService.forDto().map(customer, ListCustomerDto.class))
 				.collect(Collectors.toList());
+		
 		return new SuccessDataResult<List<ListCustomerDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public DataResult<ListCustomerDto> getById(int id) {
-		
+
 		Customer result = this.customerDao.getById(id);
-		if(result == null) {
+		
+		if (result == null) {
 			throw new BusinessException(Messages.CUSTOMER_NOT_FOUND);
 		}
-		ListCustomerDto response = this.modelMapperService.forDto().map(result, ListCustomerDto.class);		
+		ListCustomerDto response = this.modelMapperService.forDto().map(result, ListCustomerDto.class);
+		
 		return new SuccessDataResult<ListCustomerDto>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public boolean checkCustomerIfForRental(int id) {
-		if(this.customerDao.getById(id)==null) {
+		
+		if (this.customerDao.getById(id) == null) {
 			return false;
 		}
+		
 		return true;
 	}
 

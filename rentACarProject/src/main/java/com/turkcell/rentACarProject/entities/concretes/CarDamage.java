@@ -17,19 +17,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="car_damages")
-	
+@Table(name = "car_damages")
+
 public class CarDamage {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@ManyToOne
-	@JoinColumn(name= "car_id")
+	@JoinColumn(name = "car_id")
 	private Car car;
 }

@@ -51,6 +51,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	public DataResult<List<ListOrderedAdditionalServiceDto>> getAll() {
 
 		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.findAll();
+		
 		List<ListOrderedAdditionalServiceDto> response = result.stream()
 				.map(orderedAdditionalService -> this.modelMapperService.forDto().map(orderedAdditionalService,
 						ListOrderedAdditionalServiceDto.class))
@@ -74,6 +75,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	public DataResult<List<ListOrderedAdditionalServiceDto>> getOrderedAdditionalServiceByRental(int rentalId) {
 
 		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.getByRental_id(rentalId);
+		
 		List<ListOrderedAdditionalServiceDto> response = result.stream()
 				.map(orderedAdditionalService -> this.modelMapperService.forDto().map(orderedAdditionalService,
 						ListOrderedAdditionalServiceDto.class))
@@ -81,12 +83,14 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
 		return new SuccessDataResult<List<ListOrderedAdditionalServiceDto>>(response, Messages.SUCCESS);
 	}
-	
+
 	@Override
 	public DataResult<List<ListOrderedAdditionalServiceDto>> getOrderedAdditionalServiceByAdditionalService(
 			int additionalServiceId) {
 
-		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.getByAdditionalService_id(additionalServiceId);
+		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao
+				.getByAdditionalService_id(additionalServiceId);
+		
 		List<ListOrderedAdditionalServiceDto> response = result.stream()
 				.map(orderedAdditionalService -> this.modelMapperService.forDto().map(orderedAdditionalService,
 						ListOrderedAdditionalServiceDto.class))
@@ -96,22 +100,23 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 
 	@Override
-	public void create(List<Integer> additionalServiceId, int rentalId){
-		
+	public void create(List<Integer> additionalServiceId, int rentalId) {
+
 		for (Integer id : additionalServiceId) {
 			checkIfAdditionalServiceExists(id);
 		}
-		
+
 		checkIfRentalExists(rentalId);
-		
+
 		for (int additionalService : additionalServiceId) {
-			
+
 			CreateOrderedAdditionalServiceRequest createOrderedAdditionalServiceRequest = new CreateOrderedAdditionalServiceRequest();
 			createOrderedAdditionalServiceRequest.setAdditionalServiceId(additionalService);
 			createOrderedAdditionalServiceRequest.setRentalId(rentalId);
-			
-			OrderedAdditionalService orderedAdditionalService = this.modelMapperService.forDto().map(createOrderedAdditionalServiceRequest, OrderedAdditionalService.class);
-			orderedAdditionalService.setId(0);		
+
+			OrderedAdditionalService orderedAdditionalService = this.modelMapperService.forDto()
+					.map(createOrderedAdditionalServiceRequest, OrderedAdditionalService.class);
+			orderedAdditionalService.setId(0);
 
 			this.orderedAdditionalServiceDao.save(orderedAdditionalService);
 		}
@@ -178,5 +183,5 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		}
 		return orderedAdditionalService;
 	}
-	
+
 }

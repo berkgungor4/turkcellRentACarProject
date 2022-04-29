@@ -12,9 +12,12 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 public interface CityService {
 
 	DataResult<List<ListCityDto>> getAll();
+
 	DataResult<ListCityDto> getById(int id);
-	
+
 	Result create(CreateCityRequest createCityRequest);
+
 	Result update(UpdateCityRequest updateCityRequest);
+
 	Result delete(DeleteCityRequest deleteCityRequest);
 }

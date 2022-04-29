@@ -66,19 +66,19 @@ public class BrandManager implements BrandService {
 
 	@Override
 	public Result update(UpdateBrandRequest updateBrandRequest) {
-		
+
 		checkIfBrandExists(updateBrandRequest.getId());
-		
+
 		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		this.brandDao.save(brand);
 		return new SuccessResult(Messages.BRAND_UPDATE);
 	}
 
-	private Brand checkIfBrandExists(int id){
-		
-		Brand brand = this.brandDao.getBrandById(id) ;
-		
-		if (brand== null) {
+	private Brand checkIfBrandExists(int id) {
+
+		Brand brand = this.brandDao.getBrandById(id);
+
+		if (brand == null) {
 			throw new BusinessException(Messages.BRAND_NOT_FOUND);
 		}
 		return brand;

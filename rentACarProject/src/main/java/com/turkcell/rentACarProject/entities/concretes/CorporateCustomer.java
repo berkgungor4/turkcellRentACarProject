@@ -16,13 +16,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "corporate_customers")
 @PrimaryKeyJoinColumn(name = "id")
 public class CorporateCustomer extends Customer {
-	
-	@Column(name= "id", insertable = false, updatable = false)
+
+	@Column(name = "id", insertable = false, updatable = false)
 	private int id;
-	
+
 	@Column(name = "name")
 	private String name;
-	 
+
 	@Column(name = "tax_number", unique = true)
 	private String taxNumber;
 }

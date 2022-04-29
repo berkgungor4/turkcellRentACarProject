@@ -26,14 +26,14 @@ import com.turkcell.rentACarProject.entities.concretes.Rental;
 @RestController
 @RequestMapping("/api/rentals")
 public class RentalController {
-	
+
 	private RentalService rentalService;
-	
+
 	@Autowired
 	public RentalController(RentalService rentalService) {
 		this.rentalService = rentalService;
 	}
-	
+
 	@GetMapping("/getAll")
 	DataResult<List<ListRentalDto>> getAll() {
 		return this.rentalService.getAll();
@@ -43,25 +43,25 @@ public class RentalController {
 	DataResult<ListRentalDto> getById(@RequestParam int id) {
 		return this.rentalService.getById(id);
 	}
-	
+
 	@GetMapping("/getByCarId")
 	DataResult<List<ListRentalDto>> getByCarId(int carId) {
 		return this.rentalService.getRentalByCar(carId);
 	}
-	
+
 	@PostMapping("/create")
 	Rental createForCustomer(@RequestBody @Valid CreateRentalRequest createRentalRequest) {
 		return this.rentalService.createForCustomer(createRentalRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	Result delete(@RequestBody DeleteRentalRequest deleteCarRequest) {
-		return this.rentalService.delete(deleteCarRequest);		
+		return this.rentalService.delete(deleteCarRequest);
 	}
 
 	@PutMapping("/update")
 	Result update(@RequestBody UpdateRentalRequest updateCarRequest) {
 		return this.rentalService.update(updateCarRequest);
 	}
-	
+
 }

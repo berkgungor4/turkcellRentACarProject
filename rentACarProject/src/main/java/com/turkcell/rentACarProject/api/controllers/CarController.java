@@ -36,12 +36,12 @@ public class CarController {
 	public Result create(@RequestBody CreateCarRequest createCarRequest) {
 		return this.carService.create(createCarRequest);
 	}
-	
+
 	@GetMapping("/getById")
 	public DataResult<ListCarDto> getById(@RequestParam int id) {
 		return this.carService.getById(id);
 	}
-	
+
 	@PutMapping("/update")
 	public Result update(@RequestBody UpdateCarRequest updateCarRequest) {
 		return this.carService.update(updateCarRequest);
@@ -56,20 +56,20 @@ public class CarController {
 	public DataResult<List<ListCarDto>> getAll() {
 		return this.carService.getAll();
 	}
-	
+
 	@GetMapping("/getAllPaged")
 	DataResult<List<ListCarDto>> getAllPaged(int pageNo, int pageSize) {
-		return this.carService.getAllPaged(pageNo, pageSize);	
+		return this.carService.getAllPaged(pageNo, pageSize);
 	}
-	
+
 	@GetMapping("/getAllSorted")
 	DataResult<List<ListCarDto>> getAllSorted(Sort.Direction direction) {
-		return this.carService.getAllSorted(direction);	
+		return this.carService.getAllSorted(direction);
 	}
-	
+
 	@GetMapping("/getAllByDailyPriceLessThanEqual")
 	DataResult<List<ListCarDto>> getAllByDailyPriceLessThanEqual(double dailyPrice) {
 		return this.carService.getAllByDailyPriceLessThanEqual(dailyPrice);
 	}
-	
+
 }

@@ -9,15 +9,15 @@ import org.springframework.stereotype.Repository;
 import com.turkcell.rentACarProject.entities.concretes.Invoice;
 
 @Repository
-public interface InvoiceDao extends JpaRepository<Invoice, Integer>{
+public interface InvoiceDao extends JpaRepository<Invoice, Integer> {
 
 	Invoice getInvoiceById(int id);
-	
+
 	List<Invoice> getByCustomer_id(int id);
-	
+
 	List<Invoice> findByCreationDateBetween(LocalDate creationDate, LocalDate returnDate);
-	
-	List<Invoice>getByRental_id(int id);
-	
+
+	List<Invoice> getByRental_id(int id);
+
 	boolean existsByInvoiceNumber(String invoiceNumber);
 }

@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class CreateAdditionalServiceRequest {
 
 	private String name;
-	private double dailyPrice;	
+	private double dailyPrice;
 }

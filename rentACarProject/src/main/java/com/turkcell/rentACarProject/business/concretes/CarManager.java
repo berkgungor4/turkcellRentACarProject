@@ -38,7 +38,9 @@ public class CarManager implements CarService {
 
 	@Override
 	public DataResult<List<ListCarDto>> getAll() {
+		
 		List<Car> result = this.carDao.findAll();
+		
 		List<ListCarDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, ListCarDto.class)).collect(Collectors.toList());
 
@@ -47,25 +49,29 @@ public class CarManager implements CarService {
 
 	@Override
 	public Result create(CreateCarRequest createCarRequest) {
+		
 		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
 		this.carDao.save(car);
+		
 		return new SuccessResult(Messages.CAR_ADD);
 	}
 
 	@Override
 	public Result delete(DeleteCarRequest deleteCarRequest) {
+		
 		Car car = this.modelMapperService.forRequest().map(deleteCarRequest, Car.class);
 		this.carDao.delete(car);
+		
 		return new SuccessResult(Messages.CAR_DELETE);
-
 	}
 
 	@Override
 	public Result update(UpdateCarRequest updateCarRequest) {
+		
 		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
 		this.carDao.save(car);
+		
 		return new SuccessResult(Messages.CAR_UPDATE);
-
 	}
 
 	@Override
@@ -74,10 +80,8 @@ public class CarManager implements CarService {
 		Car result = this.carDao.getCarById(id);
 
 		if (result == null) {
-
 			return new ErrorDataResult<ListCarDto>(Messages.CAR_NOT_FOUND);
 		}
-
 		ListCarDto response = this.modelMapperService.forDto().map(result, ListCarDto.class);
 
 		return new SuccessDataResult<ListCarDto>(response, Messages.SUCCESS);
@@ -89,7 +93,7 @@ public class CarManager implements CarService {
 		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
 		List<Car> result = this.carDao.findAll(pageable).getContent();
-
+		
 		List<ListCarDto> response = result.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, ListCarDto.class)).collect(Collectors.toList());
 

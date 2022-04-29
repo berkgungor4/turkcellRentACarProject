@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateInvoiceRequest {
-	
+
 	private int id;
-	
+
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate creationDate;
 }

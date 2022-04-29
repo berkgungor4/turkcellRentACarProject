@@ -27,23 +27,23 @@ public class CreditCardController {
 
 		this.creditCardService = creditCardService;
 	}
-	
+
 	@PostMapping("/create")
 	public Result create(@RequestBody @Valid CreateCreditCardRequest createCreditCardRequest) {
-		
+
 		return this.creditCardService.create(createCreditCardRequest);
 	}
-	
+
 	@PutMapping("/update")
 	public Result update(@RequestBody @Valid UpdateCreditCardRequest updateCreditCardRequest) {
-		
+
 		return this.creditCardService.update(updateCreditCardRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestBody @Valid DeleteCreditCardRequest deleteCreditCardRequest) {
-		
+
 		return this.creditCardService.delete(deleteCreditCardRequest);
 	}
-	
+
 }

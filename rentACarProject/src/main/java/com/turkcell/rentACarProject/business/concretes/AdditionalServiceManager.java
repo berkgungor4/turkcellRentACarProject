@@ -44,7 +44,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 		return new SuccessDataResult<List<ListAdditionalServiceDto>>(response, Messages.SUCCESS);
 	}
-	
+
 	@Override
 	public DataResult<ListAdditionalServiceDto> getById(int id) {
 
@@ -76,7 +76,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 		AdditionalService additionalService = this.additionalServiceDao
 				.getAdditionalServiceById(updateAdditionalServiceRequest.getId());
-		
+
 		this.additionalServiceDao.save(additionalService);
 
 		return new SuccessResult(Messages.ADDITIONAL_SERVICE_UPDATE);
@@ -95,8 +95,8 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	private AdditionalService checkIfAdditionalServiceExists(int id) {
 
 		AdditionalService additionalService = this.additionalServiceDao.getAdditionalServiceById(id);
-		
-		if ( additionalService == null) {
+
+		if (additionalService == null) {
 			throw new BusinessException(Messages.ADDITIONAL_SERVICE_NOT_FOUND);
 		}
 		return additionalService;

@@ -15,5 +15,4 @@ public class CreateCarRequest {
 	private int brandId;
 	private int colorId;
 	private int mileage;
-	
 }

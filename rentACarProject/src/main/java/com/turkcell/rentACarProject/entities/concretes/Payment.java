@@ -17,21 +17,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="payments")
+@Table(name = "payments")
 public class Payment {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	@Column(name = "payment_date")
 	private LocalDate paymentDate;
-	
+
 	@Column(name = "payment_total")
 	private double paymentTotal;
 
-	@Column(name="invoice_id")
+	@Column(name = "invoice_id")
 	private int invoiceId;
 
 	@Column(name = "customer_id")
@@ -39,5 +39,4 @@ public class Payment {
 
 	@Column(name = "rental_id")
 	private int rentalId;
-
 }

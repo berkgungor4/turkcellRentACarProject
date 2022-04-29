@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListPaymentDto {
-	
+
 	private int paymentId;
 	private LocalDate paymentDate;
 	private int customerId;

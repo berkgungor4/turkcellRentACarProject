@@ -13,6 +13,5 @@ import lombok.NoArgsConstructor;
 public class UpdateLateDeliveryRequest {
 
 	private UpdateRentalRequest updateRentalRequest;
-	
 	private CreateCreditCardRequest createCreditCardRequest;
 }

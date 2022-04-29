@@ -7,10 +7,8 @@ import com.turkcell.rentACarProject.entities.concretes.Brand;
 
 @Repository
 public interface BrandDao extends JpaRepository<Brand, Integer> {
-	
+
 	Brand getBrandById(int id);
-	
+
 	Brand getBrandByName(String name);
 }
-
-

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListAdditionalServiceDto {
-	
+
 	private int id;
 	private String name;
 	private double dailyPrice;

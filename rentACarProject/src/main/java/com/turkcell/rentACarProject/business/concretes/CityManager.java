@@ -21,12 +21,11 @@ import com.turkcell.rentACarProject.dataAccess.abstracts.CityDao;
 import com.turkcell.rentACarProject.entities.concretes.City;
 
 @Service
-public class CityManager implements CityService{
+public class CityManager implements CityService {
 
 	private CityDao cityDao;
 	private ModelMapperService modelMapperService;
-	
-	
+
 	public CityManager(CityDao cityDao, ModelMapperService modelMapperService) {
 		this.cityDao = cityDao;
 		this.modelMapperService = modelMapperService;
@@ -34,34 +33,35 @@ public class CityManager implements CityService{
 
 	@Override
 	public DataResult<List<ListCityDto>> getAll() {
-		
+
 		List<City> result = this.cityDao.findAll();
-		
+
 		List<ListCityDto> response = result.stream()
 				.map(city -> this.modelMapperService.forDto().map(city, ListCityDto.class))
 				.collect(Collectors.toList());
-		
+
 		return new SuccessDataResult<List<ListCityDto>>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public DataResult<ListCityDto> getById(int id) {
-		
+
 		City result = this.cityDao.getById(id);
-		
-		if(result == null) {
+
+		if (result == null) {
 			return new ErrorDataResult<ListCityDto>(Messages.CITY_NOT_FOUND);
 		}
-		ListCityDto response = this.modelMapperService.forDto().map(result, ListCityDto.class);		
-		
+		ListCityDto response = this.modelMapperService.forDto().map(result, ListCityDto.class);
+
 		return new SuccessDataResult<ListCityDto>(response, Messages.SUCCESS);
 	}
 
 	@Override
 	public Result create(CreateCityRequest createCityRequest) {
-		
+
 		City city = this.modelMapperService.forRequest().map(createCityRequest, City.class);
 		this.cityDao.save(city);
+		
 		return new SuccessResult(Messages.CITY_ADD);
 	}
 
@@ -69,6 +69,7 @@ public class CityManager implements CityService{
 	public Result update(UpdateCityRequest updateCityRequest) {
 		City city = this.modelMapperService.forRequest().map(updateCityRequest, City.class);
 		this.cityDao.save(city);
+		
 		return new SuccessResult(Messages.CITY_UPDATE);
 	}
 
@@ -76,6 +77,7 @@ public class CityManager implements CityService{
 	public Result delete(DeleteCityRequest deleteCityRequest) {
 		City city = this.modelMapperService.forRequest().map(deleteCityRequest, City.class);
 		this.cityDao.delete(city);
+		
 		return new SuccessResult(Messages.CITY_DELETE);
 	}
 

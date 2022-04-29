@@ -12,17 +12,21 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 import com.turkcell.rentACarProject.entities.concretes.Rental;
 
 public interface RentalService {
-	
+
 	DataResult<List<ListRentalDto>> getAll();
+
 	DataResult<ListRentalDto> getById(int id);
+
 	DataResult<List<ListRentalDto>> getRentalByCar(int carId);
-	
-	
-	
-	Result lateDelivery(int id, UpdateLateDeliveryRequest updateLateDeliveryRequest, UpdateRentalRequest updateRentalRequest);
+
+	Result lateDelivery(int id, UpdateLateDeliveryRequest updateLateDeliveryRequest,
+			UpdateRentalRequest updateRentalRequest);
+
 	Rental createForCustomer(CreateRentalRequest createRentalRequest);
+
 	Result update(UpdateRentalRequest updateRentalRequest);
+
 	Result delete(DeleteRentalRequest deleteRentalRequest);
-	
+
 	Result isCarRented(int carId);
 }

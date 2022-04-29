@@ -46,12 +46,12 @@ public class PaymentManager implements PaymentService {
 	private CustomerService customerService;
 	private RentalService rentalService;
 	private CreditCardService creditCardService;
-	private OrderedAdditionalServiceService orderedAdditionalServiceService; 
+	private OrderedAdditionalServiceService orderedAdditionalServiceService;
 
 	@Autowired
 	public PaymentManager(PaymentDao paymentDao, ModelMapperService modelMapperService, InvoiceService invoiceService,
-			PosService posService, CustomerService customerService, RentalService rentalService, CreditCardService creditCardService,
-			OrderedAdditionalServiceService orderedAdditionalServiceService) {
+			PosService posService, CustomerService customerService, RentalService rentalService,
+			CreditCardService creditCardService, OrderedAdditionalServiceService orderedAdditionalServiceService) {
 		this.paymentDao = paymentDao;
 		this.modelMapperService = modelMapperService;
 		this.invoiceService = invoiceService;
@@ -73,29 +73,33 @@ public class PaymentManager implements PaymentService {
 
 		return new SuccessDataResult<List<ListPaymentDto>>(response, Messages.SUCCESS);
 	}
-	
+
 	@Transactional
 	@Override
 	public Result create(boolean registered, CreatePaymentRequest createPaymentRequest) {
-		
-		this.posService.payments(createPaymentRequest.getCreateCreditCardRequest().getCardOwnerName(), createPaymentRequest.getCreateCreditCardRequest().getCardNumber(), createPaymentRequest.getCreateCreditCardRequest().getCardCvvNumber());
-		
+
+		this.posService.payments(createPaymentRequest.getCreateCreditCardRequest().getCardOwnerName(),
+				createPaymentRequest.getCreateCreditCardRequest().getCardNumber(),
+				createPaymentRequest.getCreateCreditCardRequest().getCardCvvNumber());
+
 		runPaymentProcess(registered, createPaymentRequest);
 
 		return new SuccessResult(Messages.PAYMENT_ADD);
 	}
-	
+
 	@Transactional
 	@Override
 	public void createForLateDelivery(CreateLateDeliveryRequest createLateDeliveryRequest) {
-		
-		this.posService.payments(createLateDeliveryRequest.getCreateCreditCardRequest().getCardOwnerName(), createLateDeliveryRequest.getCreateCreditCardRequest().getCardNumber(), createLateDeliveryRequest.getCreateCreditCardRequest().getCardCvvNumber());
-		runLateDeliveriesPaymentProcess(createLateDeliveryRequest);	
+
+		this.posService.payments(createLateDeliveryRequest.getCreateCreditCardRequest().getCardOwnerName(),
+				createLateDeliveryRequest.getCreateCreditCardRequest().getCardNumber(),
+				createLateDeliveryRequest.getCreateCreditCardRequest().getCardCvvNumber());
+		runLateDeliveriesPaymentProcess(createLateDeliveryRequest);
 	}
-	
+
 	@Override
 	public Result delete(DeletePaymentRequest deletePaymentRequest) {
-		
+
 		checkIfPaymentExists(deletePaymentRequest.getId());
 
 		this.paymentDao.deleteById(deletePaymentRequest.getId());
@@ -115,72 +119,74 @@ public class PaymentManager implements PaymentService {
 
 	@Transactional
 	private void runPaymentProcess(boolean registered, CreatePaymentRequest createPaymentRequest) {
-		
+
 		Rental rental = saveRental(createPaymentRequest);
-	
+
 		saveOrderedAdditionalService(createPaymentRequest.getAdditionalServiceId(), rental.getId());
-		
+
 		saveCreditCard(registered, createPaymentRequest.getCreateCreditCardRequest());
-		
+
 		Invoice invoice = saveInvoiceByCustomerType(rental);
-		
+
 		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
 		savePayment(payment, rental, invoice);
 	}
-	
+
 	@Transactional
 	private void runLateDeliveriesPaymentProcess(CreateLateDeliveryRequest createLateDeliveryRequest) {
-		
+
 		Rental rental = getByRental(createLateDeliveryRequest);
-		
+
 		Invoice invoice = saveInvoiceByCustomerType(rental);
-		
+
 		Payment payment = this.modelMapperService.forRequest().map(createLateDeliveryRequest, Payment.class);
 		savePayment(payment, rental, invoice);
 	}
 
 	private Rental getByRental(CreateLateDeliveryRequest createLateDeliveryRequest) {
-		
-		ListRentalDto listRentalDto =this.rentalService.getById(createLateDeliveryRequest.getRentalId()).getData();
-		
+
+		ListRentalDto listRentalDto = this.rentalService.getById(createLateDeliveryRequest.getRentalId()).getData();
+
 		return this.modelMapperService.forRequest().map(listRentalDto, Rental.class);
-		
 	}
+
 	private Rental saveRental(CreatePaymentRequest createPaymentRequest) {
-		
-		if(this.customerService.checkCustomerIfForRental(createPaymentRequest.getCreateRentalRequest().getCustomerId())) {
+
+		if (this.customerService
+				.checkCustomerIfForRental(createPaymentRequest.getCreateRentalRequest().getCustomerId())) {
 			return this.rentalService.createForCustomer(createPaymentRequest.getCreateRentalRequest());
 		}
-		throw new BusinessException(Messages.CUSTOMER_NOT_FOUND);		
-	}
-	
-	private void saveOrderedAdditionalService(List<Integer> additionalServiceId, int rentalId) {
 		
+		throw new BusinessException(Messages.CUSTOMER_NOT_FOUND);
+	}
+
+	private void saveOrderedAdditionalService(List<Integer> additionalServiceId, int rentalId) {
+
 		this.orderedAdditionalServiceService.create(additionalServiceId, rentalId);
 	}
-	
+
 	private void saveCreditCard(boolean registered, CreateCreditCardRequest createCreditCardRequest) {
-		
-		if(registered) {
+
+		if (registered) {
 			creditCardService.create(createCreditCardRequest);
 		}
 	}
-	
+
 	private Invoice saveInvoiceByCustomerType(Rental rental) {
-		
+
 		CreateInvoiceRequest createInvoiceRequest = new CreateInvoiceRequest();
 		createInvoiceRequest.setInvoiceNumber(RandomString.make(10));
 		createInvoiceRequest.setCustomerId(rental.getCustomer().getId());
 		createInvoiceRequest.setRentalId(rental.getId());
-		
-		if(this.customerService.checkCustomerIfForRental(rental.getCustomer().getId())) {
+
+		if (this.customerService.checkCustomerIfForRental(rental.getCustomer().getId())) {
 			return this.invoiceService.createForCustomer(createInvoiceRequest);
 		}
 		throw new BusinessException(Messages.CUSTOMER_NOT_FOUND);
 	}
 
 	private void savePayment(Payment payment, Rental rental, Invoice invoice) {
-		
+
 		payment.setCustomerId(rental.getCustomer().getId());
 		payment.setInvoiceId(invoice.getId());
 		payment.setPaymentTotal(invoice.getRentTotalPrice());
@@ -198,6 +204,7 @@ public class PaymentManager implements PaymentService {
 		if (payment == null) {
 			throw new BusinessException(Messages.PAYMENT_NOT_FOUND);
 		}
+		
 		return payment;
 	}
 

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateOrderedAdditionalServiceRequest {
-	
+
 	private int rentalId;
 	private int additionalServiceId;
 }

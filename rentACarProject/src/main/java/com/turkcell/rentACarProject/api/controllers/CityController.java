@@ -24,37 +24,37 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @RestController
 @RequestMapping("/api/cities")
 public class CityController {
-	
+
 	private CityService cityService;
 
 	@Autowired
 	public CityController(CityService cityService) {
 		this.cityService = cityService;
 	}
-	
+
 	@GetMapping("/getAll")
 	DataResult<List<ListCityDto>> getAll() {
-		return this.cityService.getAll();	
+		return this.cityService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
-	DataResult<ListCityDto> getById(@RequestParam int id){
-		return this.cityService.getById(id); 
+	DataResult<ListCityDto> getById(@RequestParam int id) {
+		return this.cityService.getById(id);
 	}
-	
+
 	@PostMapping("/create")
 	Result create(@RequestBody CreateCityRequest createCityRequest) {
-		return this.cityService.create(createCityRequest);		
+		return this.cityService.create(createCityRequest);
 	}
-	
+
 	@PutMapping("/update")
 	Result update(@RequestBody UpdateCityRequest updateCityRequest) {
-		return this.cityService.update(updateCityRequest);		
+		return this.cityService.update(updateCityRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	Result delete(@RequestBody DeleteCityRequest deleteCityRequest) {
-		return this.cityService.delete(deleteCityRequest);		
+		return this.cityService.delete(deleteCityRequest);
 	}
-	
+
 }

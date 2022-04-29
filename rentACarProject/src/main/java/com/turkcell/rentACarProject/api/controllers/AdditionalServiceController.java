@@ -23,37 +23,37 @@ import com.turkcell.rentACarProject.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/additionalServices")
 public class AdditionalServiceController {
-	
+
 	private AdditionalServiceService additionalServiceService;
 
 	@Autowired
 	public AdditionalServiceController(AdditionalServiceService additionalServiceService) {
 		this.additionalServiceService = additionalServiceService;
 	}
-	
+
 	@GetMapping("/getAll")
-	DataResult<List<ListAdditionalServiceDto>> getAll(){
+	DataResult<List<ListAdditionalServiceDto>> getAll() {
 		return this.additionalServiceService.getAll();
 	}
-	
+
 	@GetMapping("/getById")
-	public DataResult<ListAdditionalServiceDto> getById(@RequestParam int id){
+	public DataResult<ListAdditionalServiceDto> getById(@RequestParam int id) {
 		return this.additionalServiceService.getById(id);
 	}
-	
+
 	@PostMapping("/create")
 	public Result add(@RequestBody CreateAdditionalServiceRequest createAdditionalServiceRequest) {
 		return this.additionalServiceService.create(createAdditionalServiceRequest);
 	}
-	
+
 	@PutMapping("/update")
 	Result update(@RequestBody UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
 		return this.additionalServiceService.update(updateAdditionalServiceRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	Result delete(@RequestBody DeleteAdditionalServiceRequest deleteAdditionalServiceRequest) {
 		return this.additionalServiceService.delete(deleteAdditionalServiceRequest);
 	}
-	
+
 }

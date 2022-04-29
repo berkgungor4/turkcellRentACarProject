@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeleteAdditionalServiceRequest {
-	
+
 	private int id;
 }

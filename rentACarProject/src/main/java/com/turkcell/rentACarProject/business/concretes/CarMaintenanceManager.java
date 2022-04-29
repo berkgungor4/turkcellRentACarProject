@@ -41,8 +41,10 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 	@Override
 	public DataResult<List<ListCarMaintenanceDto>> getAll() {
+		
 		List<CarMaintenance> result = this.carMaintenanceDao.findAll();
- 		List<ListCarMaintenanceDto> response = result.stream().map(
+		
+		List<ListCarMaintenanceDto> response = result.stream().map(
 				carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, ListCarMaintenanceDto.class))
 				.collect(Collectors.toList());
 
@@ -53,10 +55,12 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	public DataResult<ListCarMaintenanceDto> getById(int id) {
 
 		CarMaintenance result = this.carMaintenanceDao.getById(id);
+		
 		if (result == null) {
 			return new ErrorDataResult<ListCarMaintenanceDto>(Messages.CAR_MAINTENANCE_NOT_FOUND);
 		}
 		ListCarMaintenanceDto response = this.modelMapperService.forDto().map(result, ListCarMaintenanceDto.class);
+		
 		return new SuccessDataResult<ListCarMaintenanceDto>(response, Messages.SUCCESS);
 	}
 
@@ -64,6 +68,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	public DataResult<List<ListCarMaintenanceDto>> getCarMaintenanceByCar(int carId) {
 
 		List<CarMaintenance> carMaintenanceList = this.carMaintenanceDao.getByCar_id(carId);
+		
 		List<ListCarMaintenanceDto> response = carMaintenanceList.stream()
 				.map(carMaintenance -> modelMapperService.forDto().map(carMaintenance, ListCarMaintenanceDto.class))
 				.collect(Collectors.toList());
@@ -89,6 +94,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(updateCarMaintenanceRequest,
 				CarMaintenance.class);
 		this.carMaintenanceDao.save(carMaintenance);
+		
 		return new SuccessResult(Messages.CAR_MAINTENANCE_UPDATE);
 	}
 
@@ -98,6 +104,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(deleteCarMaintenanceRequest,
 				CarMaintenance.class);
 		this.carMaintenanceDao.delete(carMaintenance);
+		
 		return new SuccessResult(Messages.CAR_MAINTENANCE_DELETE);
 	}
 
@@ -105,7 +112,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	public Result isCarInMaintenance(int carId) {
 
 		if (this.carMaintenanceDao.getCarMaintenanceById(carId) != null)
-			throw new BusinessException(Messages.CAR_MAINTENANCE_CAR_IN_RENT );
+			throw new BusinessException(Messages.CAR_MAINTENANCE_CAR_IN_RENT);
 
 		else
 			return new SuccessResult(Messages.SUCCESS);

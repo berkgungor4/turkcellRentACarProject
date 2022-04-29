@@ -9,8 +9,8 @@ import com.turkcell.rentACarProject.entities.concretes.CarDamage;
 
 @Repository
 public interface CarDamageDao extends JpaRepository<CarDamage, Integer> {
-	
+
 	CarDamage getCarDamageById(int id);
-	
+
 	List<CarDamage> getByCar_id(int id);
 }

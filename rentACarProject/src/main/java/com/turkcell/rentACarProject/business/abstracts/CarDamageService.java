@@ -10,12 +10,16 @@ import com.turkcell.rentACarProject.core.utilities.results.DataResult;
 import com.turkcell.rentACarProject.core.utilities.results.Result;
 
 public interface CarDamageService {
-	
+
 	DataResult<List<ListCarDamageDto>> getAll();
+
 	DataResult<ListCarDamageDto> getById(int id);
+
 	DataResult<List<ListCarDamageDto>> getCarDamageByCar(int carId);
-	
+
 	Result create(CreateCarDamageRequest createCarDamageRequest);
+
 	Result update(UpdateCarDamageRequest updateCarDamageRequest);
+
 	Result delete(DeleteCarDamageRequest deleteCarDamageRequest);
 }

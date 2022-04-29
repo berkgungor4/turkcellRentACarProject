@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateLateDeliveryRequest {
-	
+
 	private int rentalId;
 	private CreateCreditCardRequest createCreditCardRequest;
 }
